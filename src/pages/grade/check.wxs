@@ -1,0 +1,11 @@
+
+function isPass(str){
+  if(-1 !== str.indexOf('禁考') || parseInt(str) < 60)
+  {
+    return false;
+  }
+  return true;
+}
+module.exports = {
+  isPass : isPass,
+}

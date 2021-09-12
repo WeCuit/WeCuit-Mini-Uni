@@ -1,0 +1,19 @@
+{
+  "name": "cuit",
+  "version": "1.6.6",
+  "description": "CUIT TOOLS",
+  "main": "app.js",
+  "dependencies": {
+    "miniprogram-component-plus": "^1.0.0",
+    "parser-wx": "^1.1.1",
+    "url-parse": "^1.5.3",
+    "weui-miniprogram": "^1.0.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "uni-build": "npm run build:%PLATFORM%",
+    "uni-dev": "npm run dev:%PLATFORM%"
+  },
+  "author": "祭夜",
+  "license": "ISC"
+}

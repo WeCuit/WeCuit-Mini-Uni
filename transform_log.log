@@ -1,0 +1,306 @@
+miniprogram to uni-app 转换日志
+
+###################基本信息###################
+工具版本：v1.1.5
+转换时间: 2021-09-12 18:01:30
+项目语言: Javascript
+项目类型: vue-cli
+isTransformWXS: false
+isRenameWxToUni: true
+isMergeWxssToVue: true
+isRepair: false
+
+################小程序基本信息#################
+name: cuit
+version: 1.6.6
+description: CUIT TOOLS
+appid: wxfa2ea65288e28233
+projectname: 
+compileType: miniprogram
+author: 祭夜
+
+###################目录信息###################
+sourceFolder: D:/Project/WeCuit-Project/WeCuit-Mini - uni - test
+targetFolder: D:\Project\WeCuit-Project\WeCuit-Mini - uni - test_uni_vue-cli\src
+outputFolder: D:/Project/WeCuit-Project/WeCuit-Mini - uni - test_uni_vue-cli
+miniprogramRoot: D:/Project/WeCuit-Project/WeCuit-Mini - uni - test
+
+###################日志信息###################
+Convert wxs file ..\WeCuit-Mini - uni - test_uni_vue-cli\src\components\dynamicForm\vant\wxs\add-unit.wxs success!
+Convert wxs file ..\WeCuit-Mini - uni - test_uni_vue-cli\src\components\dynamicForm\vant\wxs\array.wxs success!
+Convert wxs file ..\WeCuit-Mini - uni - test_uni_vue-cli\src\components\dynamicForm\vant\wxs\bem.wxs success!
+Convert wxs file ..\WeCuit-Mini - uni - test_uni_vue-cli\src\components\dynamicForm\vant\wxs\memoize.wxs success!
+Convert wxs file ..\WeCuit-Mini - uni - test_uni_vue-cli\src\components\dynamicForm\vant\wxs\object.wxs success!
+Convert wxs file ..\WeCuit-Mini - uni - test_uni_vue-cli\src\components\dynamicForm\vant\wxs\utils.wxs success!
+Convert wxs file ..\WeCuit-Mini - uni - test_uni_vue-cli\src\miniprogram_npm\weui-miniprogram\miniprogram_dist\slideview\slideview.wxs success!
+[Error] props: autopause 的默认值与type所定义的类型 Boolean 不一致，需转换后手动调整    file:  miniprogram_npm\parser-wx\index.js
+[Error] props: autosetTitle 的默认值与type所定义的类型 Boolean 不一致，需转换后手动调整    file:  miniprogram_npm\parser-wx\index.js
+[Tip] 组件间关系 relations 在Uniapp上不支持，请转换后尝试修复、或先注释、或先不管~    file:  miniprogram_npm\parser-wx\index.js
+[Tip] 组件间关系 relations 在Uniapp上不支持，请转换后尝试修复、或先注释、或先不管~    file:  miniprogram_npm\weui-miniprogram\miniprogram_dist\checkbox-group\checkbox-group.js
+[Error] 检测变量 show 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\toptips\toptips.js
+[Error] 检测变量 show 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\toptips\toptips.js
+[Tip] 组件间关系 relations 在Uniapp上不支持，请转换后尝试修复、或先注释、或先不管~    file:  miniprogram_npm\weui-miniprogram\miniprogram_dist\cells\cells.js
+[Error] 检测变量 current 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\tabbar\tabbar.js
+[Error] 检测变量 tabCur 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   components\tab\index.js
+[Error] 检测变量 tabCur 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   components\tab\index.js
+[Error] 检测变量 size 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   components\tab\index.js
+[Tip] 组件间关系 relations 在Uniapp上不支持，请转换后尝试修复、或先注释、或先不管~    file:  miniprogram_npm\weui-miniprogram\miniprogram_dist\checkbox\checkbox.js
+[Error] 检测变量 multi 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\checkbox\checkbox.js
+[Error] 检测变量 checked 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\checkbox\checkbox.js
+[Error] 检测变量 checked 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\checkbox\checkbox.js
+[Error] 检测变量 current 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\gallery\gallery.js
+[Error] 检测变量 current 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\gallery\gallery.js
+[Error] 检测变量 show 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\gallery\gallery.js
+[Error] 检测变量 buttons 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\slideview\slideview.js
+[Error] 检测变量 buttons 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\dialog\dialog.js
+[Error] 检测变量 show 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\dialog\dialog.js
+[Error] 检测变量 actions 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\actionsheet\actionsheet.js
+[Error] 检测变量 show 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\actionsheet\actionsheet.js
+[Error] 检测变量 value 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\searchbar\searchbar.js
+[Error] 检测变量 focus 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\searchbar\searchbar.js
+[Error] 检测变量 focus 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\searchbar\searchbar.js
+[Error] 检测变量 focus 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\searchbar\searchbar.js
+[Error] 检测变量 value 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\searchbar\searchbar.js
+[Error] data 里变量：cookie 有重复，请手动删除其中一个！     file:  pages\officeGrade\query.js
+[Error] data 里变量：codeKey 有重复，请手动删除其中一个！     file:  pages\officeGrade\query.js
+[Error] data 里变量：imgCDN 有重复，请手动删除其中一个！     file:  welcome\pages\guide\index.js
+[Tip] 组件间关系 relations 在Uniapp上不支持，请转换后尝试修复、或先注释、或先不管~    file:  miniprogram_npm\weui-miniprogram\miniprogram_dist\form-page\form-page.js
+[Error] 检测变量 files 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\uploader\uploader.js
+[Error] 检测变量 files 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\uploader\uploader.js
+[Error] 检测变量 files 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\uploader\uploader.js
+[Error] 检测变量 files 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\uploader\uploader.js
+[Error] 检测变量 refreshSize 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   components\scroll\index.js
+[Error] 检测变量 show 位于props里，不能对其使用setData赋值，转换后请手动修改。   file-->   miniprogram_npm\weui-miniprogram\miniprogram_dist\half-screen-dialog\half-screen-dialog.js
+[Tip] 检测setData里面的变量 [] 是数组形式，uniapp不支持，已尝试进行修复。   file-->   components\dynamicForm\index.js
+[Tip] 检测setData里面的变量 [] 是数组形式，uniapp不支持，已尝试进行修复。   file-->   components\dynamicForm\index.js
+[Tip] 检测setData里面的变量 [] 是数组形式，uniapp不支持，已尝试进行修复。   file-->   components\dynamicForm\index.js
+[Tip] 检测setData里面的变量 [key] 是数组形式，uniapp不支持，已尝试进行修复。   file-->   components\dynamicForm\index.js
+[Tip] 检测setData里面的变量 [] 是数组形式，uniapp不支持，已尝试进行修复。   file-->   components\dynamicForm\index.js
+[Tip] 检测setData里面的变量 [] 是数组形式，uniapp不支持，已尝试进行修复。   file-->   components\dynamicForm\index.js
+[Tip] 组件间关系 relations 在Uniapp上不支持，请转换后尝试修复、或先注释、或先不管~    file:  miniprogram_npm\weui-miniprogram\miniprogram_dist\cell\cell.js
+[Tip] 检测到@tap绑定的函数 item 不存在，已添加空函数占位   file-> pages/card/card
+[Tip] 检测到@tap绑定的函数 item 不存在，已添加空函数占位   file-> pages/index/index
+[Tip] 检测到@tap绑定的函数 item 不存在，已添加空函数占位   file-> welcome/pages/welcome
+[Tip] 检测到@tap绑定的函数 item 不存在，已添加空函数占位   file-> college/pages/list/list
+[Tip] 检测到@tap绑定的函数 item 不存在，已添加空函数占位   file-> college/pages/menu/menu
+[Error] 检测到@tap.stop绑定的函数 canIUse?handler.visited:'linkpress' 是代码块，在Uniapp里不支持，请转换后手动调整为具名函数形式   file-> miniprogram_npm/parser-wx/trees/trees
+[Tip] 检测到@success绑定的函数 item 不存在，已添加空函数占位   file-> miniprogram_npm/weui-miniprogram/miniprogram_dist/grids/grids
+[Tip] 检测到@fail绑定的函数 item 不存在，已添加空函数占位   file-> miniprogram_npm/weui-miniprogram/miniprogram_dist/grids/grids
+[Tip] 检测到@complete绑定的函数 item 不存在，已添加空函数占位   file-> miniprogram_npm/weui-miniprogram/miniprogram_dist/grids/grids
+[Tip] 检测到@tap绑定的函数 handler 不存在，已添加空函数占位   file-> miniprogram_npm/weui-miniprogram/miniprogram_dist/slideview/slideview
+[Tip] 检测到@transitionend绑定的函数 handler 不存在，已添加空函数占位   file-> miniprogram_npm/weui-miniprogram/miniprogram_dist/slideview/slideview
+[Tip] 检测到@touchstart绑定的函数 handler 不存在，已添加空函数占位   file-> miniprogram_npm/weui-miniprogram/miniprogram_dist/slideview/slideview
+[Tip] 检测到@touchmove绑定的函数 handler 不存在，已添加空函数占位   file-> miniprogram_npm/weui-miniprogram/miniprogram_dist/slideview/slideview
+[Tip] 检测到@touchend绑定的函数 handler 不存在，已添加空函数占位   file-> miniprogram_npm/weui-miniprogram/miniprogram_dist/slideview/slideview
+Convert component api.js success!
+[命名替换]:  _videoListChanged  -->  videoListChangedFun   (原因：变量名与函数名重名)      file: miniprogram_npm\miniprogram-component-plus\video-swiper\video-swiper.js
+Convert App.vue success!
+Convert component config.example.js success!
+Convert component config.js success!
+Convert component components\cdn.js success!
+Convert custom-tab-bar\index.vue success!
+Convert component utils\card.js success!
+Convert component utils\log.js success!
+Convert component utils\tool.js success!
+Convert component utils\request.js success!
+Convert component welcome\config.js success!
+Convert component utils\qrcode.js success!
+Convert component .github\workflows\ci.js success!
+Convert component .github\workflows\updateURL.js success!
+Convert components\beat-char\beat-char.vue success!
+Convert components\image-cropper\image-cropper.vue success!
+Convert components\dynamicForm\index.vue success!
+Convert components\mytree\mytree.vue success!
+Convert components\scroll\index.vue success!
+Convert component miniprogram_npm\miniprogram-component-plus\index.js success!
+Convert miniprogram_npm\parser-wx\index.vue success!
+Convert component miniprogram_npm\querystringify\index.js success!
+Convert component miniprogram_npm\requires-port\index.js success!
+Convert component miniprogram_npm\url-parse\index.js success!
+Convert pages\THEOL\THEOL.vue success!
+Convert component pages\THEOL\api.js success!
+Convert component pages\articleView\api.js success!
+Convert pages\articleView\articleView.vue success!
+Convert pages\calendar\calendar.vue success!
+Convert component pages\card\api.js success!
+Convert pages\card\card.vue success!
+Convert component pages\checkIn\api.js success!
+Convert pages\checkIn\edit.vue success!
+Convert pages\checkIn\list.vue success!
+Convert component pages\courseTable\api.js success!
+Convert pages\courseTable\courseTable.vue success!
+Convert component pages\exam\api.js success!
+Convert pages\exam\exam.vue success!
+Convert component pages\grade\api.js success!
+Convert pages\grade\grade.vue success!
+Convert component pages\homeNews\api.js success!
+Convert pages\homeNews\homeNews.vue success!
+Convert component pages\index\api.js success!
+Convert pages\index\index.vue success!
+Convert component pages\laboratory\api.js success!
+Convert pages\laboratory\detail.vue success!
+Convert pages\laboratory\list.vue success!
+Convert pages\maintenance\maintenance.vue success!
+Convert component pages\my\api.js success!
+Convert pages\my\my.vue success!
+Convert component pages\newsList\api.js success!
+Convert pages\newsList\newsList.vue success!
+Convert component pages\officeGrade\api.js success!
+Convert pages\officeGrade\query.vue success!
+Convert component utils\login\login.js success!
+Convert components\tab\index.vue success!
+Convert components\scrolltab\index.vue success!
+Convert component utils\rsa\wx_rsa.js success!
+Convert component utils\xmldom\dom-parser.js success!
+Convert component utils\xmldom\dom.js success!
+Convert component utils\xmldom\entities.js success!
+Convert component utils\xmldom\sax.js success!
+Convert welcome\pages\welcome.vue success!
+Convert component welcome\resources\school.js success!
+Convert component welcome\utils\amap-wx.js success!
+Convert component components\dynamicForm\utils\formatTime.js success!
+Convert college\pages\list\list.vue success!
+Convert miniprogram_npm\miniprogram-component-plus\emoji\emoji.vue success!
+Convert college\pages\menu\menu.vue success!
+Convert miniprogram_npm\miniprogram-component-plus\index-list\index-list.vue success!
+Convert miniprogram_npm\miniprogram-component-plus\video-swiper\video-swiper.vue success!
+Convert component miniprogram_npm\parser-wx\libs\CssHandler.js success!
+Convert component miniprogram_npm\parser-wx\libs\MpHtmlParser.js success!
+Convert component miniprogram_npm\parser-wx\libs\config.js success!
+Convert miniprogram_npm\parser-wx\trees\trees.vue success!
+Convert component miniprogram_npm\weui-miniprogram\miniprogram_dist\index.js success!
+Convert pages\THEOL\dir\dir.vue success!
+Convert pages\THEOL\tree\tree.vue success!
+Convert pages\courseTable\imgCropper\imgCropper.vue success!
+Convert pages\my\ADMag\ADMag.vue success!
+Convert pages\my\dataMag\dataMag.vue success!
+Convert pages\my\sso\sso.vue success!
+Convert pages\my\sub\sub.vue success!
+Convert welcome\pages\admit\admit.vue success!
+Convert component welcome\pages\admit\api.js success!
+Convert welcome\pages\guide\index.vue success!
+Convert components\dynamicForm\components\timePicker\timePicker.vue success!
+Convert component components\dynamicForm\vant\common\color.js success!
+Convert component components\dynamicForm\vant\common\component.js success!
+Convert component components\dynamicForm\vant\common\utils.js success!
+Convert components\dynamicForm\vant\icon\index.vue success!
+Convert components\dynamicForm\vant\info\index.vue success!
+Convert component components\dynamicForm\vant\mixins\basic.js success!
+Convert component components\dynamicForm\vant\mixins\button.js success!
+Convert component components\dynamicForm\vant\mixins\link.js success!
+Convert component components\dynamicForm\vant\mixins\iphonex.js success!
+Convert component components\dynamicForm\vant\mixins\touch.js success!
+Convert component components\dynamicForm\vant\mixins\open-type.js success!
+Convert component components\dynamicForm\vant\mixins\transition.js success!
+Convert components\dynamicForm\vant\uploader\index.vue success!
+Convert component college\pages\menu\counselor\api.js success!
+Convert college\pages\menu\counselor\counselor.vue success!
+Convert component components\dynamicForm\vant\uploader\utils.js success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\actionsheet\actionsheet.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\badge\badge.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\cell\cell.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\cells\cells.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\checkbox\checkbox.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\checkbox-group\checkbox-group.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\dialog\dialog.vue success!
+Convert component miniprogram_npm\weui-miniprogram\miniprogram_dist\form\form-validator.js success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\form\form.vue success!
+Convert component miniprogram_npm\weui-miniprogram\miniprogram_dist\form\validator.js success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\form-page\form-page.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\gallery\gallery.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\grids\grids.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\half-screen-dialog\half-screen-dialog.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\icon\icon.vue success!
+Convert component miniprogram_npm\weui-miniprogram\miniprogram_dist\icon\icondata.js success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\loading\loading.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\msg\msg.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\navigation-bar\navigation-bar.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\searchbar\searchbar.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\slideview\slideview.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\tabbar\tabbar.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\toptips\toptips.vue success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\uploader\uploader.vue success!
+Convert component miniprogram_npm\weui-miniprogram\miniprogram_dist\utils\object.js success!
+Convert component miniprogram_npm\weui-miniprogram\miniprogram_dist\utils\string.js success!
+Convert pages\my\ADMag\watchAD\watchAD.vue success!
+Convert welcome\pages\guide\map\details.vue success!
+Convert welcome\pages\guide\map\index.vue success!
+Convert welcome\pages\guide\map\polyline.vue success!
+Convert welcome\pages\guide\map\search.vue success!
+Convert component components\dynamicForm\vant\mixins\observer\behavior.js success!
+Convert component components\dynamicForm\vant\mixins\observer\index.js success!
+Convert component components\dynamicForm\vant\mixins\observer\props.js success!
+Convert app-wxa-auto-dark.css.wxss success!
+Convert pages\common-wxa-auto-dark.css.wxss success!
+Convert pages\common.css.wxss success!
+Convert assets\wxss\iconfont-wxa-auto-dark.css.wxss success!
+Convert assets\wxss\iconfont.css.wxss success!
+Convert components\dynamicForm\index-wxa-auto-dark.css.wxss success!
+Convert components\scroll\index-wxa-auto-dark.css.wxss success!
+Convert college\pages\common.css.wxss success!
+Convert pages\articleView\articleView-wxa-auto-dark.css.wxss success!
+Convert pages\checkIn\edit-wxa-auto-dark.css.wxss success!
+Convert pages\grade\grade-wxa-auto-dark.css.wxss success!
+Convert pages\homeNews\homeNews-wxa-auto-dark.css.wxss success!
+Convert pages\index\index-wxa-auto-dark.css.wxss success!
+Convert pages\laboratory\iconfont.css.wxss success!
+Convert pages\newsList\newsList-wxa-auto-dark.css.wxss success!
+Convert components\tab\index-wxa-auto-dark.css.wxss success!
+Convert welcome\pages\common-wxa-auto-dark.css.wxss success!
+Convert welcome\pages\common.css.wxss success!
+Convert welcome\pages\font.css.wxss success!
+Convert college\pages\menu\iconfont.css.wxss success!
+Convert pages\my\sso\sso-wxa-auto-dark.css.wxss success!
+Convert welcome\pages\admit\admit-wxa-auto-dark.css.wxss success!
+Convert components\dynamicForm\components\timePicker\timePicker-wxa-auto-dark.css.wxss success!
+Convert components\dynamicForm\vant\common\index.css.wxss success!
+Convert components\dynamicForm\vant\common\index-wxa-auto-dark.css.wxss success!
+Convert components\dynamicForm\vant\icon\index-wxa-auto-dark.css.wxss success!
+Convert components\dynamicForm\vant\info\index-wxa-auto-dark.css.wxss success!
+Convert components\dynamicForm\vant\uploader\index-wxa-auto-dark.css.wxss success!
+Convert components\dynamicForm\vant\common\style\clearfix.css.wxss success!
+Convert components\dynamicForm\vant\common\style\ellipsis.css.wxss success!
+Convert components\dynamicForm\vant\common\style\hairline.css.wxss success!
+Convert miniprogram_npm\miniprogram-component-plus\weui-wxss\dist\style\weui.css.wxss success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\weui-wxss\dist\style\weui.css.wxss success!
+Convert miniprogram_npm\weui-miniprogram\miniprogram_dist\weui-wxss\dist\style\icon\weui-icon.css.wxss success!
+
+转换完成: 
+总共 0 处调用支付Api
+输出 74 个vue文件
+耗时：70510ms
+当前转换模式：【vue-cli】，生成vue-cli项目，注意输出目录带有 vue-cli 后缀。
+优点：所有资源文件位置与原项目一致，资源引用完美；
+缺点：上手有点点难度，转换完成后，需要运行命令：npm i
+
+
+常见问题：
+问：为什么不将 this.setData({a:1}) 转换为 this.a = 1 呢?
+答：已做polyfill，转换后可正常使用setData函数(见main.js文件)
+
+问：getApp()能在Uni-app里面使用吗？
+答：可以的，Uni-app早已支持
+
+问：为什么转换后我的资源文件都不见了？
+答：已将所有非static目录下面的资源文件都移入到static目录里
+
+问：小程序转换为Uni-app项目后，还能转换成其他小程序项目吗？
+答：当然可以，必须可以！Uni-app项目可以编译到各种小程序、H5和APP等平台
+
+问：为什么小程序运行正常，而转换到Uni-app后报了这么多错误呢？
+答：很正常。Uni-app与小程序无法一一对应，且代码写法千变万化，工具也无法预测所有情况，只能尽力做到更少的报错、更好的兼容。有问题可以添加qq group(780359397、361784059)进行交流
+
+更多信息请阅读答疑文档：https://gitee.com/zhangdaren/articles/blob/master/miniprogram-to-uniapp工具答疑.md
+
+gitee：https://gitee.com/zhangdaren/miniprogram-to-uniapp
+github：https://github.com/zhangdaren/miniprogram-to-uniapp
+
+欢迎各位大佬star和issue!
+
+
+
+注意!!! 
+注意!!! 
+注意!!!
+源项目可能是引用了 We UI 组件，转换后不太好修复。 建议重新转换，转换前先 “备份” 源项目，再使用 https://gitee.com/zhangdaren/weui-miniprogram-js 替换 We UI 后，再进行转换！！！
+
