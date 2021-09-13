@@ -1,7 +1,7 @@
 <template>
 <view>
 <!-- pages/articleView/articleView.wxml -->
-<htmlParser :html="htmlText" @linkpress="bindLinkHandle" domain="https://www.cuit.edu.cn/">
+<htmlParser :content="htmlText" @linktap="bindLinkHandle" domain="https://www.cuit.edu.cn/">
   少女祈祷中......
 </htmlParser>
 <!-- 验证码提示框 -->
@@ -43,7 +43,7 @@
 import { downFilePrepare } from './api';
 const app = getApp();
 var downloadTask = null;
-import htmlParser from "../../miniprogram_npm/parser-wx/index";
+import htmlParser from "mp-html/dist/uni-app/components/mp-html/mp-html";
 
 export default {
   data() {
@@ -204,17 +204,18 @@ export default {
     },
     // html链接处理
     bindLinkHandle: function (e) {
-      if (-1 != e.detail.href.search(/.pdf|.docx|.doc|.xlsx|.xls|.zip|.rar/i)) {
+			console.log(e)
+			const href = e.href
+      if (-1 != href.search(/.pdf|.docx|.doc|.xlsx|.xls|.zip|.rar/i)) {
         // 带有指定后缀，此类链接不进行自动跳转/复制操作
-        e.detail.ignore();
         uni.showToast({
           icon: 'loading',
           title: '正在下载文件'
         });
-        if (0 != e.detail.href.indexOf('http') && 0 != e.detail.href.indexOf('/')) e.detail.href = '/' + e.detail.href;
-        let type = e.detail.href.substr(e.detail.href.lastIndexOf('.') + 1);
+        if (0 != href.indexOf('http') && 0 != href.indexOf('/')) href = '/' + href;
+        let type = href.substr(href.lastIndexOf('.') + 1);
         uni.downloadFile({
-          url: app.globalData.API_DOMAIN + '/File/transferV2/type.' + type + '?link=' + encodeURIComponent(e.detail.href) + '&page=' + this.link,
+          url: app.globalData.API_DOMAIN + '/File/transferV2/type.' + type + '?link=' + encodeURIComponent(href) + '&page=' + this.link,
           success: function (res) {
             if (200 != res.statusCode) {
               uni.showToast({
@@ -250,11 +251,10 @@ export default {
           }
 
         });
-      } else if (-1 != e.detail.href.search(/system\/_content\/download.jsp/i)) {
+      } else if (-1 != href.search(/system\/_content\/download.jsp/i)) {
         // 此类链接不进行自动跳转/复制
-        e.detail.ignore();
-        this.downLink = e.detail.href;
-        this.checkDownLink(e.detail.href, '');
+        this.downLink = href;
+        this.checkDownLink(href, '');
       }
     },
     checkDownLink: function (link, codeValue) {
