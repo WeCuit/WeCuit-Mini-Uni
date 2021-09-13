@@ -43,7 +43,7 @@
             <swiper-item v-for="(item, i) in menuList" :key="i">
               <block v-for="(item, j) in item" :key="j">
                 <view class="grid-item-child">
-                  <view :data-path="item.path" :data-needlogin="item.needLogin" @tap="item.action">
+                  <view :data-path="item.path" :data-needlogin="item.needLogin" @tap="bindAction">
                     <!-- <icon class='grid-item-icon' type='{{item.type}}' size='{{item.size}}' color='{{item.color}}'/> -->
                     <view :class="'grid-item-icon iconfont ' + item.icon"></view>
                     <text class="grid-item-label">{{item.text}}</text>
@@ -161,35 +161,31 @@ export default {
         path: "../courseTable/courseTable",
         size: 30,
         color: "orange",
-        action: "bindAction",
+				needLogin: false,
         icon: "icon-kebiao",
         text: "个人课表"
       }, {
         path: "../grade/grade",
         size: 30,
         color: "pink",
-        action: "bindAction",
         icon: "icon-zhuxingtu",
         text: "成绩"
       }, {
         path: "../exam/exam",
         size: 30,
         color: "green",
-        action: "bindAction",
         icon: "icon-kaoshi",
         text: "考试"
       }, {
         path: "../newsList/newsList?source=jwc",
         size: 30,
         color: "rgb(0,255,255)",
-        action: "bindAction",
         icon: "icon-tongzhi",
         text: "教务公告"
       }, {
         path: "../card/card",
         size: 30,
         color: "purple",
-        action: "bindAction",
         icon: "icon-yiqiatong",
         needLogin: true,
         text: "一卡通"
@@ -197,7 +193,6 @@ export default {
         path: "../checkIn/list",
         size: 30,
         color: "#1296db",
-        action: "bindAction",
         icon: "icon-daka",
         needLogin: true,
         text: "每日打卡"
@@ -205,7 +200,6 @@ export default {
       //   "type": "courseTableCom",
       //   "size": 30,
       //   "color": "blue",
-      //   "action": "bindAction",
       //   "icon": "icon-kebiaoxinxi",
       //   "text": "公共课表"
       // },
@@ -220,7 +214,6 @@ export default {
       //     path: "/map/pages/index",
       //     size: 30,
       //     color: "#185f97",
-      //     action: "bindAction",
       //     icon: "icon-ditu",
       //     text: "游览校园",
       // },
@@ -228,28 +221,24 @@ export default {
         path: "../calendar/calendar",
         size: 30,
         color: "#32CD32",
-        action: "bindAction",
         text: "校历/地图",
         icon: "icon-calendar"
       }], [{
         path: "../laboratory/list",
         size: 30,
         color: "#185f97",
-        action: "bindAction",
         icon: "icon-shiyanshijianshe",
         text: "实验查询"
       }, {
         path: "../officeGrade/query",
         size: 30,
         color: "#32CD32",
-        action: "bindAction",
         text: "office\r\n成绩查询",
         icon: "icon-office"
       }, // {
       //     path: "../vote/vote",
       //     size: 30,
       //     color: "#32CD32",
-      //     action: "bindAction",
       //     text: "教师评选",
       //     icon: "icon-toupiao",
       // },
@@ -257,14 +246,12 @@ export default {
         path: "/college/pages/list/list",
         size: 30,
         color: "purple",
-        action: "bindAction",
         icon: "icon-xueyuan",
         text: "学院信息"
       } // {
       //     path: "../THEOL/THEOL",
       //     size: 30,
       //     color: "purple",
-      //     action: "bindAction",
       //     needLogin: true,
       //     icon: "icon-jiaoxuepingtai",
       //     text: "教学平台",
@@ -273,7 +260,6 @@ export default {
       //     path: "",
       //     size: 30,
       //     color: "purple",
-      //     action: "testAction",
       //     icon: "",
       //     text: "测试",
       // },
@@ -411,7 +397,7 @@ export default {
     },
     bindAction: function (e) {
       var data = e.currentTarget.dataset;
-      console.log(data);
+      console.log('bindAction', data);
 
       if (data.needlogin && !app.globalData.isUser) {
         uni.showToast({
