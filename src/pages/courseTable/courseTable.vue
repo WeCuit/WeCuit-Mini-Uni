@@ -24,7 +24,7 @@
 <view @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd" @longpress="bindLongTab" style="background: url({background})no-repeat;background-size: 100% 100%;">
   <view :style="'background-color: rgba(255, 255, 255, ' + backOpacity + ');'">
     <view class="top-style" :style="'background-color: rgba(238,238,238, ' + gridOpacity + ');'">
-      <view v-for="(item, index) in ['一','二','三','四','五','六','日']" :key="index" class="top-text" :style="'color: ' + ((increment==0&&index+1==day_num)?'#009688':'black') + ';'">
+      <view v-for="(item, index) in ['一','二','三','四','五','六','日']" :key="index" class="top-text" :style="'color: ' + ((increment==0&&index+2==day_num)?'#009688':'black') + ';'">
         周{{item}}</view>
     </view>
     <view>
@@ -468,11 +468,13 @@ export default {
       let semesterId = this.termArray[1][this.termIndex[1]].id !== 0 ? "semester.id=" + this.termArray[1][this.termIndex[1]].id + ";" : "";
       getCourseOption(`${semesterId}${this.sessionInfo.JWGL_cookie};TWFID=${this.sessionInfo.TWFID}`).then(res => {
         let tempData = {};
-        let sem = res.semesters;
-        tempData['courseTypeArray'] = res.courseType;
-        tempData['courseWeekArray'] = res.courseWeek;
+				const resp = res.data
+				const {data} = resp
+        let sem = data.semesters;
+        tempData['courseTypeArray'] = data.courseType;
+        tempData['courseWeekArray'] = data.courseWeek;
         uni.setStorage({
-          data: res.courseWeek,
+          data: data.courseWeek,
           key: 'courseWeekArray'
         });
         tempData['termArray'] = [sem.list[0]];
