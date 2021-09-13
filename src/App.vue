@@ -1,6 +1,5 @@
 <script>
 	//app.js
-	const RSA = require("./utils/rsa/wx_rsa.js");
 	const config = require("./config.js");
 	const login = require("./utils/login/login.js");
 	const log = require("./utils/log.js");
