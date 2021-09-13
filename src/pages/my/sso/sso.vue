@@ -108,6 +108,10 @@
 				isAutoLogin: false,
 				accountInfo: {},
 				sessionInfo: {},
+				vpnPass: "",
+				isWebVpnLogin: false,
+				isJwglLogin: false,
+				
 				// 登录函数
 				loginFunc: {
 					// 教务管理系统登录
@@ -116,16 +120,17 @@
 							`TGC=${app.globalData.sessionInfo.SSO_TGC}; TWFID=${app.globalData.sessionInfo.TWFID}`;
 						jwglLogin(cookie).then(res => {
 							const resp = res.data;
-							_this.sessionInfo.JWGL_cookie = resp.data;
+							const {data} = resp
+							_this.sessionInfo.JWGL_cookie = data.cookie;
 							uni.setStorage({
 								key: "JWGL_cookie",
-								data: resp.data
+								data: data.cookie
 							});
-
+				
 							_this.setData({
 								isJwglLogin: true
 							});
-
+				
 							uni.showToast({
 								title: "教务处登录成功"
 							});
@@ -152,7 +157,7 @@
 													key: "TWFID"
 												});
 											}
-
+				
 											resolve();
 										},
 										fail: err => {
@@ -197,7 +202,7 @@
 										cookie = res.header["set-cookie"];
 									else if ("undefined" != typeof res.header["Set-Cookie"])
 										cookie = res.header["Set-Cookie"];
-
+				
 									if (msg == "radius auth succ") {
 										ret["status"] = 200;
 										var TWFID = doc.getElementsByTagName("TwfID")[0]
@@ -220,11 +225,11 @@
 									key: "TWFID"
 								});
 							}
-
+				
 							_this.setData({
 								isWebVpnLogin: true
 							});
-
+				
 							uni.showToast({
 								title: "WebVpn登录成功"
 							});
@@ -234,12 +239,12 @@
 							console.log(err);
 							var doc = err.doc;
 							var code = doc.getElementsByTagName("ErrorCode")[0].firstChild.data;
-
+				
 							if (code == 20021) {
 								uni.showToast({
 									title: "已是登录状态"
 								});
-
+				
 								_this.setData({
 									isWebVpnLogin: true,
 									isNeedLogin: false
@@ -249,7 +254,7 @@
 									icon: "none",
 									title: "账号信息错误"
 								});
-
+				
 								if (err.needCaptcha) { // _this.getCaptcha();
 								}
 							} else if (code == 20041) {
@@ -290,7 +295,7 @@
 								var RSA_ENCRYPT_EXP = doc.getElementsByTagName("RSA_ENCRYPT_EXP")[0].firstChild
 									.data;
 								let auth;
-
+				
 								if (msg == "login auth success") {
 									auth = {
 										rc: randCode,
@@ -301,13 +306,13 @@
 								} else {
 									return Promise.reject(2004);
 								}
-
+				
 								const ret = auth;
-
+				
 								if (ret.TwfID != app.globalData.sessionInfo.TWFID) {
 									app.globalData.sessionInfo.TWFID = ret.TwfID;
 								}
-
+				
 								encrypt.setPublic(ret.RSA_ENCRYPT_KEY, ret.RSA_ENCRYPT_EXP.toString(16));
 								ret["encrypted_pwd"] = encrypt.encrypt(_this.vpnPass ? _this.vpnPass : _this
 									.userPass + "_" + ret.rc);
@@ -334,7 +339,7 @@
 						WV_loginCheck(cookie).then(res => {
 							var doc = xmlParser.parseFromString(res.data);
 							var msg = doc.getElementsByTagName("Message")[0].firstChild.data;
-
+				
 							if ("auth succ." === msg) {
 								_this.setData({
 									isWebVpnLogin: true
@@ -343,12 +348,12 @@
 								_this.loginFunc.WEBVPN(() => {
 									_this.loginFunc.JWGL();
 								});
-
+				
 								app.globalData.sessionInfo.TWFID = "";
 							}
 						});
 					},
-
+				
 					/**
 					 * 教务管理登录检查
 					 * @param {*} r
@@ -366,9 +371,7 @@
 						});
 					}
 				},
-				vpnPass: "",
-				isWebVpnLogin: false,
-				isJwglLogin: false
+				
 			};
 		},
 
@@ -689,8 +692,9 @@
 			loginAction: function(e) {
 				console.log(e);
 				this.loginFunc[e.currentTarget.dataset.type]();
-			}
-		}
+			},
+		},
+		
 	};
 </script>
 <style>
