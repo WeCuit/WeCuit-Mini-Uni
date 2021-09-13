@@ -13,7 +13,7 @@
 					初始密码：名字的首字母且大写+身份证号后6位+a
 				</text>
 			</view>
-			<form catchsubmit="formSubmit" catchreset="formReset">
+			<form @submit="formSubmit" @reset="formReset">
 				<mp-cells ext-class="my-cells" title="请输入登录信息">
 					<mp-cell title="学号：">
 						<view><input name="userId" class="login weui-input" type="number" placeholder="请输入学号"
@@ -66,20 +66,21 @@
 
 <script>
 	// pages/my/sso/sso.js
-	const XMLParser = require("../../../utils/xmldom/dom-parser.js");
+	const XMLParser = require('@xmldom/xmldom')
 	const xmlParser = new XMLParser.DOMParser();
 	import {
 		captchaOCR,
 		getSSOCaptcha,
 		checkSSOLogin,
+		ssoDoLogin,
 		jwglLogin,
 		ssoLogout,
 		WV_login,
 		WV_loginAuth,
 		jwglLoginCheck,
 		WV_loginCheck
-	} from '../api'; // var L = new login.DoLogin();
-	// rsa 加密
+	} from '../api'; 
+	
 	// var L = new login.DoLogin();
 	// rsa 加密
 	const RSA = require("../../../utils/rsa/wx_rsa.js");
@@ -467,8 +468,7 @@
 					userPass: formData.userPass,
 					captcha: formData.captcha
 				};
-				app.globalData.loginClass.ssoDoLogin(sso_data).then(cookies => {
-					console.log("success");
+				ssoDoLogin(sso_data).then(cookies => {
 					var tgc = cookies.match(/TGC=(.*?);/);
 					this.sessionInfo.SSO_TGC = tgc[1];
 					this.setData({
@@ -598,7 +598,6 @@
 			},
 			// ORC识别验证码
 			captchaDecode: function(pic, r) {
-				console.log('captchaDecode')
 				try {
 					const byteArray = new Uint8Array(pic);
 					const hexParts = [];

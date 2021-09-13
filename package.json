@@ -22,6 +22,7 @@
     "@vue/cli": "^4.5.13",
     "@vue/cli-service": "^4.5.13",
     "@vue/shared": "^3.0.0",
+    "@xmldom/xmldom": "^0.7.4",
     "core-js": "^3.6.5",
     "flyio": "^0.6.2",
     "mp-html": "^2.1.5",
