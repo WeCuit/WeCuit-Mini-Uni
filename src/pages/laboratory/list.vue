@@ -179,6 +179,7 @@ export default {
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+		console.log('onLoad')
     uni.showShareMenu({
       withShareTicket: true,
       // for wx
@@ -192,20 +193,25 @@ export default {
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
+		console.log('onReady')
     if ("undefined" !== typeof qq && 1 === getCurrentPages().length) {
       this.setData({
         fromShare: true
       });
     }
+    this.doSubmit2();
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    this.doSubmit2();
+		console.log('onShow')
   },
 
+	mounted() {
+		console.log('mounted')
+	},
   /**
    * 生命周期函数--监听页面隐藏
    */
@@ -289,12 +295,10 @@ export default {
       }, 500);
     },
     hideAni: function (e) {
-      // console.log(e);
       let eleId = e.currentTarget.dataset.ele;
-      this.hideData["ele_" + eleId] = !Boolean(this.hideData["ele_" + eleId]);
-      this.setData({
-        hideData: this.hideData
-      });
+			const temp = JSON.parse(JSON.stringify(this.hideData))
+      temp["ele_" + eleId] = !Boolean(this.hideData["ele_" + eleId]);
+			this.hideData = temp
     },
     calAniHeight: function () {
       let query = uni.createSelectorQuery();
@@ -304,7 +308,7 @@ export default {
       }
 
       query.exec(ret => {
-        console.log(ret);
+        console.log('ret', ret);
         ret.forEach((v, i) => {
           this.heightData[i] = v.height + 'px';
         });
@@ -352,11 +356,14 @@ export default {
     requestForList: function (param) {
       getLabAll(param).then(res => {
         const resp = res.data;
-        this.setData({
-          retList: resp.data.list
-        });
-        this.setData(resp.data.form);
-        this.calAniHeight();
+				const {data} = resp
+				console.log(data)
+				this.retList = data.list
+				Object.getOwnPropertyNames(data.form).forEach(name=>{
+					this[name] = data.form[name]
+				})
+				setTimeout(this.calAniHeight, 500)
+        // this.calAniHeight();
       });
     }
   }

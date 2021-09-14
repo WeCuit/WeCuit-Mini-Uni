@@ -311,11 +311,12 @@ export default {
     requestForDetail: function (param) {
       getLabDetail(param).then(res => {
         const resp = res.data;
+				const {data} = resp
         this.setData({
-          retList: resp.data.list
+          retList: data.list
         });
-        this.setData(resp.data.form);
-        this.calAniHeight();
+        this.setData(data.form);
+        setTimeout(this.calAniHeight, 500);
       });
     },
     showNotice: function (e) {
@@ -334,7 +335,6 @@ export default {
       }, 500);
     },
     calAniHeight: function () {
-      console.log("calAniHeight");
       let query = uni.createSelectorQuery();
       query.select(`#card-body-0`).boundingClientRect();
 
@@ -342,7 +342,6 @@ export default {
         query.select(`#card-body-${1 + key}`).boundingClientRect();
       }
 
-      console.log("calAniHeight1");
       query.exec(ret => {
         if (null == ret) return;
         ret.forEach((v, i) => {
@@ -356,10 +355,9 @@ export default {
     hideAni: function (e) {
       console.log(e);
       let eleId = e.currentTarget.dataset.ele;
-      this.hideData["ele_" + eleId] = !Boolean(this.hideData["ele_" + eleId]);
-      this.setData({
-        hideData: this.hideData
-      });
+			const temp = JSON.parse(JSON.stringify(this.hideData))
+      temp["ele_" + eleId] = !Boolean(this.hideData["ele_" + eleId]);
+			this.hideData = temp
     },
     doSubmit: function (e) {
       let data = e.detail.value;
