@@ -1,5 +1,6 @@
 import { API_DOMAIN } from '../config';
 const baseUrl = API_DOMAIN;
+
 /**
  * http请求封装
  * @param method 请求方法类型
@@ -11,7 +12,6 @@ const baseUrl = API_DOMAIN;
  * @param config.loading 请求加载效果 {0: 正常加载, 1: 表单提交加载效果 }
  * @param config.loadingMsg 请求提示信息
  */
-
 function httpBase(method, url, data, config = {}) {
   const requestUrl = (url.indexOf("http") === 0 ? '' : baseUrl) + url;
   const header = {
@@ -42,18 +42,17 @@ function httpBase(method, url, data, config = {}) {
       timeout: 4000,
       responseType: config.responseType || 'text',
       success: function (res) {
-        console.log("result", res);
+        console.log("request result --> ", res);
 
         if (config.loading) {
           uni.hideLoading();
         } else {
           uni.hideNavigationBarLoading();
-        } // 服务器响应状态码异常检查
-
-
+        }
+				
+				// 服务器[响应头]状态码异常检查
         if (res.statusCode !== 200) {
           const resp = res.data;
-          console.log(resp);
 
           if (resp.msg) {
             uni.showToast({
@@ -64,12 +63,12 @@ function httpBase(method, url, data, config = {}) {
 
           reject(res);
           return;
-        } // 数据响应体状态码异常检查
-
-
+        }
+				
+				// 数据响应体状态码异常检查
         let resp = res.data || {};
-        let code = resp.code;
-
+        let {code} = resp
+				
         if (code && code !== 200) {
           if (503 === code) {
             // 维护提示

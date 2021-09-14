@@ -28,7 +28,10 @@
 		{
 			"path": "pages/checkIn/edit",
 			"style": {
-				"enablePullDownRefresh": true
+				"enablePullDownRefresh": true,
+				"usingComponents": {
+					"d-form": "/wxcomponents/dynamicForm"
+				}
 			}
 		},
 		{
