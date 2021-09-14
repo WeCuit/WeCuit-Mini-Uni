@@ -1,7 +1,7 @@
 <template>
-<view>
-  <mytree :model="treeData" @tapitem="tapDirItem"></mytree>
-</view>
+  <view>
+    <mytree :model="treeData" @tapitem="tapDirItem"></mytree>
+  </view>
 </template>
 
 <script>
@@ -14,10 +14,10 @@ export default {
   data() {
     return {
       treeData: {
-        text: '列表加载中~',
+        text: "列表加载中~",
         id: 0
       },
-      lid: ''
+      lid: ""
     };
   },
 
@@ -30,7 +30,7 @@ export default {
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad: function(options) {
     this.courseId = options.courseId;
     console.log(options);
   },
@@ -38,51 +38,50 @@ export default {
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function () {
+  onReady: function() {
     this.onPullDownRefresh();
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {},
+  onShow: function() {},
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function () {},
+  onHide: function() {},
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function () {},
+  onUnload: function() {},
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function () {
+  onPullDownRefresh: function() {
     this.getDirTree(this.courseId);
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function () {},
+  onReachBottom: function() {},
 
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {},
+  onShareAppMessage: function() {},
   methods: {
-    tapDirItem: function (e) {
-      console.log(e);
+    tapDirItem: function(e) {
       uni.navigateTo({
-        url: '../dir/dir?lid=' + this.courseId + '&folderId=' + e.detail.itemid
+        url: "../dir/dir?lid=" + this.courseId + "&folderId=" + e.detail.itemid
       });
     },
-    getDirTree: function (lid) {
+    getDirTree: function(lid) {
       uni.request({
-        url: app.globalData.API_DOMAIN + '/Theol/dirTree?lid=' + lid,
+        url: app.globalData.API_DOMAIN + "/Theol/dirTree?lid=" + lid,
         success: res => {
           var data = res.data;
 
@@ -92,15 +91,15 @@ export default {
             });
           } else {
             uni.showToast({
-              icon: 'none',
+              icon: "none",
               title: data.errMsg
             });
           }
         },
         fail: err => {
           uni.showToast({
-            icon: 'none',
-            title: '请求失败'
+            icon: "none",
+            title: "请求失败"
           });
           reject(err);
         }
@@ -112,5 +111,4 @@ export default {
 <style>
 /* pages/THEOL/dir/dir.wxss */
 @import "../../common.css";
-
 </style>

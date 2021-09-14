@@ -40,8 +40,8 @@ class OFFICE {
   getCaptcha(cookie, codeKey) {
     console.log(cookie, codeKey);
     return getOfficeCaptcha({
-      cookie: cookie,
-      codeKey: codeKey
+      cookie,
+      codeKey
     });
   }
 
@@ -59,11 +59,11 @@ export default {
       captchaImg: '',
       cookie: '',
       codeKey: '',
-      cookie: cookie,
-      codeKey: codeKey,
-      captchaCode: "",
-      syncTime: "",
-      result: ""
+      cookie: '',
+      codeKey: '',
+      captchaCode: '',
+      syncTime: '',
+      result: ''
     };
   },
 
@@ -104,7 +104,6 @@ export default {
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    console.log('下拉');
     this.refreshPage3389({});
   },
 
@@ -131,7 +130,7 @@ export default {
       let data = e.detail.value;
       data.codeKey = this.codeKey;
       data.cookie = this.cookie;
-      console.log(data);
+      
       office.query(data).then(res => {
         const resp = res.data;
         this.setData({

@@ -1,38 +1,57 @@
 <template>
-<view>
-<view class="top-wrap">
-	<tab id="category" :tab-data="categoryMenu" :tab-cur="categoryCur" :size="80" :scroll="true" @change="toggleCategory">
-	</tab>
-</view>
+  <view>
+    <view class="top-wrap">
+      <tab
+        id="category"
+        :tab-data="categoryMenu"
+        :tab-cur="categoryCur"
+        :size="80"
+        :scroll="true"
+        @change="toggleCategory"
+      ></tab>
+    </view>
 
-<swiper :current="categoryCur" :duration="duration" @animationfinish="animationFinish">
-	<swiper-item v-for="(item, index) in categoryData" :key="index">
-		<scroll :requesting="item.requesting" :end="item.end" :empty-show="item.emptyShow" :list-count="item.listData.length" :has-top="true" :top-size="80" @refresh="refresh" @more="more">
-				<view class="cells">
-					<view v-for="(item, index2) in item.listData" :key="index2" class="cell" :data-link="item.link" @tap="showArticle">
-						<view class="cell__bd">
-							<view class="name">
-								<rich-text :nodes="item.title"></rich-text>
-							</view>
-							<view class="tags">
-								<view class="tags__bd">
-									<view v-for="(item, index) in item.tags" :key="index" class="tag">
-										{{item.name}}
-									</view>
-								</view>
-								<view class="date">{{item.date}}</view>
-							</view>
-						</view>
-					</view>
-				</view>
-		</scroll>
-	</swiper-item>
-</swiper>
-</view>
+    <swiper :current="categoryCur" :duration="duration" @animationfinish="animationFinish">
+      <swiper-item v-for="(item, index) in categoryData" :key="index">
+        <scroll
+          :requesting="item.requesting"
+          :end="item.end"
+          :empty-show="item.emptyShow"
+          :list-count="item.listData.length"
+          :has-top="true"
+          :top-size="80"
+          @refresh="refresh"
+          @more="more"
+        >
+          <view class="cells">
+            <view
+              v-for="(item, index2) in item.listData"
+              :key="index2"
+              class="cell"
+              :data-link="item.link"
+              @tap="showArticle"
+            >
+              <view class="cell__bd">
+                <view class="name">
+                  <rich-text :nodes="item.title"></rich-text>
+                </view>
+                <view class="tags">
+                  <view class="tags__bd">
+                    <view v-for="(item, index) in item.tags" :key="index" class="tag">{{item.name}}</view>
+                  </view>
+                  <view class="date">{{item.date}}</view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </scroll>
+      </swiper-item>
+    </swiper>
+  </view>
 </template>
 
 <script>
-import { getNewsList, getNewsTag } from './api';
+import { getNewsList, getNewsTag } from "./api";
 const app = getApp();
 let pageStart = 1;
 import tab from "../../components/tab/index";
@@ -49,7 +68,7 @@ export default {
       // 分类菜单数据, 字符串数组格式
       categoryData: [],
       // 所有数据列
-      source: 'home',
+      source: "home",
       selected: 0
     };
   },
@@ -96,7 +115,7 @@ export default {
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
+  onShow: function() {
     if (typeof this.getTabBar === "function" && this.getTabBar()) {
       this.getTabBar().setData({
         selected: 1
@@ -115,7 +134,7 @@ export default {
   /**
    * 分享至微信朋友圈
    */
-  onShareTimeline: function () {
+  onShareTimeline: function() {
     return {
       title: this.tabs[this.activeTab].text,
       query: `source=${this.source}&tag=${this.tabs[this.activeTab]}`
@@ -125,11 +144,13 @@ export default {
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function (e) {
+  onShareAppMessage: function(e) {
     return {
       title: this.tabs[this.activeTab].name,
       // for wechat
-      path: `/pages/newsList/newsList?source=${this.source}&tag=${this.tabs[this.activeTab]}`,
+      path: `/pages/newsList/newsList?source=${this.source}&tag=${
+        this.tabs[this.activeTab]
+      }`,
       // for qq
       query: `source=${this.source}&tag=${this.tabs[this.activeTab]}`
     };
@@ -153,7 +174,7 @@ export default {
         let listData = data.list || [];
         pageData.requesting = false;
 
-        if (type === 'refresh') {
+        if (type === "refresh") {
           pageData.listData = listData;
           pageData.end = data.over;
           pageData.page = currentPage + 1;
@@ -183,7 +204,6 @@ export default {
 
     // 顶部tab切换事件
     toggleCategory(e) {
-      console.log(1212);
       this.setData({
         duration: 0
       });
@@ -196,7 +216,6 @@ export default {
 
     // 页面滑动切换事件
     animationFinish(e) {
-      console.log(1313);
       this.setData({
         duration: 300
       });
@@ -207,29 +226,29 @@ export default {
         let pageData = this.getCurrentData();
 
         if (pageData.listData.length === 0) {
-          this.getList('refresh', pageStart);
+          this.getList("refresh", pageStart);
         }
       }, 0);
     },
 
     // 刷新数据
     refresh() {
-      this.getList('refresh', pageStart);
+      this.getList("refresh", pageStart);
     },
 
     // 加载更多
     more() {
-      this.getList('more', this.getCurrentData(this.categoryCur).page);
+      this.getList("more", this.getCurrentData(this.categoryCur).page);
     },
 
     showArticle(e) {
-      console.log(e);
       var path = e.currentTarget.dataset.link;
       uni.navigateTo({
-        url: `/pages/articleView/articleView?path=${encodeURIComponent(path)}&source=${this.source}&domain=${this.domain}`
+        url: `/pages/articleView/articleView?path=${encodeURIComponent(
+          path
+        )}&source=${this.source}&domain=${this.domain}`
       });
     }
-
   }
 };
 </script>
@@ -237,54 +256,65 @@ export default {
 .top-wrap {
   position: fixed;
   left: 0;
-  top: 0;/*  #ifdef  H5  */
+  top: 0; /*  #ifdef  H5  */
   top: calc(88rpx + constant(safe-area-inset-top));
-  top: calc(88rpx + env(safe-area-inset-top));/*  #endif  */
+  top: calc(88rpx + env(safe-area-inset-top)); /*  #endif  */
   width: 100%;
   background-color: #ffffff;
   z-index: 99;
-  box-shadow: 0 0 20rpx -5rpx rgba(0, 0, 0, 0.1); }
+  box-shadow: 0 0 20rpx -5rpx rgba(0, 0, 0, 0.1);
+}
 
 swiper {
-  height: 100vh; }
+  height: 100vh;
+}
 
 .cells {
   background: #ffffff;
-  margin-top: 20rpx; }
+  margin-top: 20rpx;
+}
 
 .cell {
   display: flex;
-  padding: 20rpx; }
-  .cell:not(:last-child) {
-    border-bottom: 1rpx solid #ebedf0; }
-  .cell__bd {
-    flex: 1; }
-    .cell__bd .name {
-      height: 80rpx;
-      font-size: 28rpx;
-      margin-bottom: 12rpx; }
-      .cell__bd .name > view {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        overflow: hidden;
-        word-break: break-all; }
-    .cell__bd .tags {
-      display: flex;
-      align-items: center; }
-      .cell__bd .tags .tags__bd {
-        flex: 1; }
-        .cell__bd .tags .tags__bd > view {
-          display: inline-block;
-          border: 1px solid rgba(63, 130, 253, 0.6);
-          color: rgba(63, 130, 253, 0.6);
-          font-size: 20rpx;
-          height: 30rpx;
-          line-height: 30rpx;
-          padding: 0 8rpx; }
-      .cell__bd .tags .date {
-        color: #999999;
-        font-size: 24rpx; }
-      @import "./homeNews-wxa-auto-dark.css";
-
+  padding: 20rpx;
+}
+.cell:not(:last-child) {
+  border-bottom: 1rpx solid #ebedf0;
+}
+.cell__bd {
+  flex: 1;
+}
+.cell__bd .name {
+  height: 80rpx;
+  font-size: 28rpx;
+  margin-bottom: 12rpx;
+}
+.cell__bd .name > view {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  word-break: break-all;
+}
+.cell__bd .tags {
+  display: flex;
+  align-items: center;
+}
+.cell__bd .tags .tags__bd {
+  flex: 1;
+}
+.cell__bd .tags .tags__bd > view {
+  display: inline-block;
+  border: 1px solid rgba(63, 130, 253, 0.6);
+  color: rgba(63, 130, 253, 0.6);
+  font-size: 20rpx;
+  height: 30rpx;
+  line-height: 30rpx;
+  padding: 0 8rpx;
+}
+.cell__bd .tags .date {
+  color: #999999;
+  font-size: 24rpx;
+}
+@import "./homeNews-wxa-auto-dark.css";
 </style>

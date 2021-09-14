@@ -14,7 +14,7 @@
     </mp-cells>
     <button type="primary" form-type="submit">查询</button>
 </form>
-<htmlParser :html="result">
+<htmlParser :content="result">
   少女祈祷中......
 </htmlParser>
 
@@ -40,7 +40,7 @@ import { queryAdmit } from './api';
 const app = getApp();
 import mpCells from "../../../miniprogram_npm/weui-miniprogram/cells/cells";
 import mpCell from "../../../miniprogram_npm/weui-miniprogram/cell/cell";
-import htmlParser from "../../../miniprogram_npm/parser-wx/index";
+import htmlParser from "mp-html/dist/uni-app/components/mp-html/mp-html";
 
 export default {
   data() {

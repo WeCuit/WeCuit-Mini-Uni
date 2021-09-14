@@ -1,24 +1,34 @@
 <template>
-<view>
-<view class="page" :style="(cdnSign?('background: url('+imgCDN+images+'?token='+cdnToken+'&sign='+cdnSign +');'):'') + ' background-size: 100% 100%;'">
-  <view class="button_container">
-    <navigator class="button" url="map/details">
-      <text>{{shortName}}简介</text>
-    </navigator>
-    <navigator class="button" url="map/index">
-      <text>逛逛{{shortName}}</text>
-    </navigator>
+  <view>
+    <view
+      class="page"
+      :style="(cdnSign?('background: url('+imgCDN+images+'?token='+cdnToken+'&sign='+cdnSign +');'):'') + ' background-size: 100% 100%;'"
+    >
+      <view class="button_container">
+        <navigator class="button" url="map/details">
+          <text>{{shortName}}简介</text>
+        </navigator>
+        <navigator class="button" url="map/index">
+          <text>逛逛{{shortName}}</text>
+        </navigator>
+      </view>
+      <view class="copyright">
+        <text>© 成信大</text>
+        <text>{{mapCopyright?"数据版权："+mapCopyright.name:""}}</text>
+      </view>
+    </view>
+    <!-- 回首页按钮悬浮按钮 -->
+    <view v-if="fromShare">
+      <navigator
+        url="/pages/index/index"
+        open-type="reLaunch"
+        class="floatBtn"
+        style="bottom: 5%;font-size: x-large;"
+      >
+        <view class="iconfont icon-shouye"></view>
+      </navigator>
+    </view>
   </view>
-  <view class="copyright">
-    <text>© 成信大</text>
-    <text>{{mapCopyright?"数据版权："+mapCopyright.name:""}}</text>
-  </view>
-</view>
-<!-- 回首页按钮悬浮按钮 -->
-<view v-if="fromShare">
-  <navigator url="/pages/index/index" open-type="reLaunch" class="floatBtn" style="bottom: 5%;font-size: x-large;"><view class="iconfont icon-shouye"></view></navigator>
-</view>
-</view>
 </template>
 
 <script>
@@ -50,7 +60,7 @@ export default {
       mapCopyright: school.introduce.mapCopyright,
       // app.imgCDN
       imgCDN: config.imgCDN,
-      cdnToken: '',
+      cdnToken: "",
       cdnEtime: 0,
       cdnSign: null,
       fromShare: false
@@ -59,7 +69,7 @@ export default {
 
   components: {},
   props: {},
-  onLoad: function (options) {
+  onLoad: function(options) {
     CDN.getCdnToken(this, app); // app.js
 
     app.globalData.imgCDN = config.imgCDN;
@@ -68,7 +78,7 @@ export default {
       title: app.globalData.introduce.name
     });
   },
-  onShow: function () {
+  onShow: function() {
     if ("undefined" !== typeof qq && 1 === getCurrentPages().length) {
       this.setData({
         fromShare: true
@@ -79,14 +89,13 @@ export default {
   /**
    * 分享至微信朋友圈
    */
-  onShareTimeline: function (e) {
-    // console.log(e)
+  onShareTimeline: function(e) {
     return {
       title: app.globalData.introduce.name + " - 校园导览",
       query: ""
     };
   },
-  onShareAppMessage: function (res) {
+  onShareAppMessage: function(res) {
     if (res.from === "button") {
       // 来自页面内转发按钮
       console.log(res.target);
@@ -96,20 +105,20 @@ export default {
       title: app.globalData.introduce.name + " - 校园导览",
       path: "/map/pages/index",
       imageUrl: app.globalData.imgCDN + app.globalData.introduce.share,
-      success: function (res) {// 转发成功
+      success: function(res) {
+        // 转发成功
       },
-      fail: function (res) {// 转发失败
+      fail: function(res) {
+        // 转发失败
       }
     };
   },
   methods: {
     // 分包初始化数据处理
-    subPackageInit: function () {
+    subPackageInit: function() {
       var _this = this; //载入学校位置数据
 
-
       _this.loadSchoolConf(); //如果已经授权，提前获取定位信息
-
 
       uni.getSetting({
         success(res) {
@@ -118,7 +127,7 @@ export default {
             uni.getLocation({
               type: "wgs84",
               // 默认为 wgs84 返回 gps 坐标，gcj02 返回可用于 wx.openLocation 的坐标
-              success: function (res) {
+              success: function(res) {
                 app.globalData.latitude = res.latitude;
                 app.globalData.longitude = res.longitude;
                 app.globalData.islocation = true;
@@ -126,13 +135,12 @@ export default {
             });
           }
         }
-
       });
     },
-    loadNetWorkScoolConf: function () {
+    loadNetWorkScoolConf: function() {
       var _this = this;
 
-      return new Promise(function (resolve, reject) {
+      return new Promise(function(resolve, reject) {
         if (!_this.debug) {
           // 优先读取缓存信息
           var map = uni.getStorageSync("map");
@@ -143,13 +151,12 @@ export default {
             app.globalData.introduce = introduce;
           } // 再加载网络数据
 
-
           uni.request({
             url: config.updateUrl,
             header: {
               "content-type": "application/json"
             },
-            success: function (res) {
+            success: function(res) {
               if (res.data.map && res.data.map.length > 0) {
                 //刷新数据
                 app.globalData.map = res.data.map;
@@ -166,7 +173,7 @@ export default {
                 });
               }
             },
-            complete: function (info) {
+            complete: function(info) {
               resolve();
             },
             fail: err => {
@@ -178,14 +185,13 @@ export default {
         }
       });
     },
-    loadSchoolConf: function () {
+    loadSchoolConf: function() {
       var _this = this; // 载入本地数据
-
 
       app.globalData.map = school.map;
       app.globalData.introduce = school.introduce;
 
-      _this.loadNetWorkScoolConf().then(function () {
+      _this.loadNetWorkScoolConf().then(function() {
         // 渲染id
         for (let i = 0; i < app.globalData.map.length; i++) {
           for (let b = 0; b < app.globalData.map[i].data.length; b++) {
@@ -246,7 +252,6 @@ export default {
   font-size: 27rpx;
   text-align: center;
   line-height: 150%;
-  text-shadow:#000 1rpx 0 0,#000 0 1rpx 0,#000 -1rpx 0 0,#000 0 -1rpx 0;
+  text-shadow: #000 1rpx 0 0, #000 0 1rpx 0, #000 -1rpx 0 0, #000 0 -1rpx 0;
 }
-
 </style>

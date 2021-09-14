@@ -5,7 +5,7 @@
     <view class="grid-item-container">
         <block v-for="(item, j) in menuList" :key="j">
           <view class="grid-item-child">
-            <view :data-data="item.data" :data-needlogin="item.needLogin" @tap="item.action">
+            <view :data-data="item.data" :data-needlogin="item.needLogin" @tap="bindAction">
               <!-- <icon class='grid-item-icon' type='{{item.type}}' size='{{item.size}}' color='{{item.color}}'/> -->
               <view :class="'grid-item-icon iconfont ' + item.icon" :style="'color:' + item.color"></view>
               <text class="grid-item-label">{{item.text}}</text>
@@ -27,28 +27,24 @@ export default {
         data: "introduce",
         size: 30,
         color: "#03a9f4",
-        action: "bindAction",
         icon: "icon-jianjie",
         text: "学院简介"
       }, {
         data: "newsList",
         size: 30,
         color: "#03a9f4",
-        action: "bindAction",
         icon: "icon-zixun",
         text: "学院资讯"
       }, {
         data: "counselor",
         size: 30,
         color: "#03a9f4",
-        action: "bindAction",
         icon: "icon-fudaoyuanxinxi",
         text: "辅导员"
       }, {
         data: "contact",
         size: 30,
         color: "#03a9f4",
-        action: "bindAction",
         icon: "icon-zixun",
         text: "联系信息"
       }],
@@ -106,6 +102,7 @@ export default {
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {},
+	
   methods: {
     newsAction: function (e) {
       var data = e.currentTarget.dataset;
@@ -122,7 +119,6 @@ export default {
     },
     bindAction: function (e) {
       var data = e.currentTarget.dataset;
-      console.log(data);
 
       switch (data.data) {
         case 'introduce':
