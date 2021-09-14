@@ -119,7 +119,6 @@ export default {
     },
     bindAction: function (e) {
       var data = e.currentTarget.dataset;
-      console.log(data);
 
       switch (data.data) {
         case 'introduce':

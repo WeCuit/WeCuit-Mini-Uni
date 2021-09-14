@@ -109,7 +109,7 @@ export default {
    * 分享至微信朋友圈
    */
   onShareTimeline: function (e) {
-    // console.log(e)
+    
     return {
       title: '成信大校历'
     };

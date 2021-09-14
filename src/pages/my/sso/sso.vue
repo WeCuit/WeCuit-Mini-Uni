@@ -690,7 +690,6 @@
 				this.getCaptcha(this.SSO_SESSION);
 			},
 			loginAction: function(e) {
-				console.log(e);
 				this.loginFunc[e.currentTarget.dataset.type]();
 			},
 		},

@@ -197,7 +197,7 @@ export default {
    * 分享至微信朋友圈
    */
   onShareTimeline: function (e) {
-    // console.log(e)
+    
     return {
       title: '教学部门',
       query: ""
@@ -219,7 +219,6 @@ export default {
   methods: {
     bindAction: function (e) {
       var data = e.currentTarget.dataset;
-      console.log(data);
 
       if (data.needlogin && !app.isUser) {
         uni.showToast({

@@ -149,7 +149,7 @@ export default {
    * 分享至微信朋友圈
    */
   onShareTimeline: function (e) {
-    // console.log(e)
+    
     return {
       title: this.title,
       query: 'source=' + this.source + '&path=' + this.path + '&domain=' + this.domain
@@ -204,7 +204,7 @@ export default {
     },
     // html链接处理
     bindLinkHandle: function (e) {
-			console.log(e)
+      
 			const href = e.href
       if (-1 != href.search(/.pdf|.docx|.doc|.xlsx|.xls|.zip|.rar/i)) {
         // 带有指定后缀，此类链接不进行自动跳转/复制操作

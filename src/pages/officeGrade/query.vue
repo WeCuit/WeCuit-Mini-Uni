@@ -130,7 +130,7 @@ export default {
       let data = e.detail.value;
       data.codeKey = this.codeKey;
       data.cookie = this.cookie;
-      console.log(data);
+      
       office.query(data).then(res => {
         const resp = res.data;
         this.setData({

@@ -264,7 +264,6 @@ Component({
     },
     // 选择文件
     onFileRead(e) {
-      console.log(e);
       for (let val of e.detail.file) {
         const size = this.data.fileMap[e.target.id].original.maxSize;
         if (val.size > size * 1024 * 1024) {
@@ -282,7 +281,6 @@ Component({
     },
     //删除文件
     onFileDelete(e) {
-      console.log(e);
       const files = this.data.fileMap[e.target.id].list;
       files.splice(e.detail.index, 1);
       this.updateData(`fileMap.${e.target.id}.list`, files);
