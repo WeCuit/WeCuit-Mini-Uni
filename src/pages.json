@@ -199,7 +199,9 @@
 			"root": "college",
 			"pages": [{
 					"path": "pages/list/list",
-					"style": {}
+					"style": {
+						"navigationBarTitleText": "教学部门"
+					}
 				},
 				{
 					"path": "pages/menu/menu",
