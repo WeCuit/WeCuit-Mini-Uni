@@ -6,8 +6,9 @@ name: QQ CI
 #写法二：在master分支的push操作时触发构建
 on:
     push:
-        branches:
-            - QQ
+        branches: [master]
+    pull_request:
+        branches: [master]
 
 jobs:
     build-qq-ci: #job名称
