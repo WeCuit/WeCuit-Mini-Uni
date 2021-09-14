@@ -80,6 +80,7 @@
             "es6" : true,
             "postcss" : true
         },
-        "appid" : "1111006861"
+        "appid" : "1111006861",
+				"groupIdList":["940309953"]
     }
 }
