@@ -5,7 +5,7 @@
     <view class="grid-item-container">
         <block v-for="(item, j) in menuList" :key="j">
           <view class="grid-item-child">
-            <view :data-data="item.data" :data-needlogin="item.needLogin" @tap="item.action">
+            <view :data-data="item.data" :data-needlogin="item.needLogin" @tap="bindAction">
               <!-- <icon class='grid-item-icon' type='{{item.type}}' size='{{item.size}}' color='{{item.color}}'/> -->
               <view :class="'grid-item-icon welcome-font ' + item.icon" :style="'color:' + item.color"></view>
               <text class="grid-item-label">{{item.text}}</text>
@@ -25,14 +25,12 @@ export default {
         data: "admit/admit",
         size: 30,
         color: "#03a9f4",
-        action: "bindAction",
         icon: "welcome-ziyuan",
         text: "录取查询"
       }, {
         data: "guide/index",
         size: 30,
         color: "#03a9f4",
-        action: "bindAction",
         icon: "welcome-ditu",
         text: "游览校园"
       }]

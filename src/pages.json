@@ -171,7 +171,9 @@
 				},
 				{
 					"path": "pages/admit/admit",
-					"style": {}
+					"style": {
+						"navigationBarTitleText": "录取查询"
+						}
 				},
 				{
 					"path": "pages/guide/index",
