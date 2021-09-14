@@ -21,7 +21,7 @@
 </picker>
 
 
-<view @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd" @longpress="bindLongTab" style="background: url({background})no-repeat;background-size: 100% 100%;">
+<view @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd" @longpress="bindLongTab" :style="'background: url(' + background + ')no-repeat;background-size: 100% 100%;'">
   <view :style="'background-color: rgba(255, 255, 255, ' + backOpacity + ');'">
     <view class="top-style" :style="'background-color: rgba(238,238,238, ' + gridOpacity + ');'">
       <view v-for="(item, index) in ['一','二','三','四','五','六','日']" :key="index" class="top-text" :style="'color: ' + ((increment==0&&index+2==day_num)?'#009688':'black') + ';'">

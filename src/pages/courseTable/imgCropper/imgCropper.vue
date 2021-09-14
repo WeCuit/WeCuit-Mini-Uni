@@ -1,6 +1,6 @@
 <template>
 <view>
-<image-cropper id="image-cropper" :limit_move="true" :disable_rotate="true" :width="width" :height="height" :imgSrc="src" :quality="1" @load="cropperLoad" @imageload="loadImage" @tapcut="clickCut"></image-cropper>
+<image-cropper id="image-cropper" ref="image-cropper-ref" :limit_move="true" :disable_rotate="true" :width="width" :height="height" :imgSrc="src" :quality="1" @load="cropperLoad" @imageload="loadImage" @tapcut="clickCut"></image-cropper>
 <view class="confirmBtn" @tap="confirmCut">确定</view>
 </view>
 </template>
@@ -8,7 +8,7 @@
 <script>
 // pages/imgCropper/imgCropper.js
 const app = getApp();
-import imageCropper from "../../../components/image-cropper/image-cropper";
+import imageCropper from "../../../wxcomponents/image-cropper/image-cropper";
 
 export default {
   data() {
@@ -31,7 +31,8 @@ export default {
    */
   onLoad: function (options) {
     //获取到image-cropper实例
-    this.cropper = this.selectComponent("#image-cropper"); //开始裁剪
+    this.cropper = this.$refs['image-cropper-ref'];
+		//开始裁剪
 
     this.setData({
       src: options.src
