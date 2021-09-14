@@ -172,7 +172,7 @@
 
  			},
  			onFormSubmit: function(e) {
- 				console.log('submit', e);
+				
  				var data = e.detail;
  				var form = {};
 

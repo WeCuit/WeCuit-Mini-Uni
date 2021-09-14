@@ -223,6 +223,8 @@
 		"custom": false,
 		"borderStyle": "white",
 		"backgroundColor": "#ffffff",
+		"color": "#000000",
+		"selectedColor": "#3cc51f",
 		"list": [{
 				"pagePath": "pages/index/index",
 				"iconPath": "static/index.png",
