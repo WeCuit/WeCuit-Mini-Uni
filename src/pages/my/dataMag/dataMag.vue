@@ -159,10 +159,8 @@ export default {
     flex-direction: column;
     justify-content: space-evenly;
     border-radius: 7px;
-    margin: 0.3rem;
+    margin: 0 .3rem 0 .3rem;
     font-size: small;
-    margin-top: 3vh;
-    margin-bottom: 4rem;
 }
 .setting > .label {
     color: gray;

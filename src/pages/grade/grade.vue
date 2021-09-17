@@ -62,7 +62,12 @@ export default {
   data() {
     return {
       grade: [],
-      total: {},
+      total: {
+				learnTime:0,
+				creditTotal: 0,
+				creditGet: 0,
+				point: 0
+			},
       isGradeSub: false,
       isSysSub: false,
       sessionInfo: {},
