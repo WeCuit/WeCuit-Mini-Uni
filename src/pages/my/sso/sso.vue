@@ -68,6 +68,7 @@
 	// pages/my/sso/sso.js
 	const XMLParser = require('@xmldom/xmldom')
 	const xmlParser = new XMLParser.DOMParser();
+	const log = require('../../../utils/log.js')
 	import {
 		captchaOCR,
 		getSSOCaptcha,
@@ -590,11 +591,7 @@
 					this.setData({
 						captchaImg: imgBase64
 					});
-					this.captchaDecode(captcha, code => {
-						this.setData({
-							captchaCode: code
-						});
-					});
+					this.captchaDecode(captcha);
 				}).catch(err => {
 					console.log("error", err);
 				});
@@ -602,6 +599,7 @@
 			// ORC识别验证码
 			captchaDecode: function(pic, r) {
 				try {
+					log.info('加密')
 					const byteArray = new Uint8Array(pic);
 					const hexParts = [];
 					let start = parseInt(byteArray.length / 3);
@@ -611,20 +609,23 @@
 
 					for (let i = start; i < end; i++) {
 						// convert value to hexadecimal
-						const hex = byteArray[i].toString(16); // pad with zeros to length 2
-
-						const paddedHex = ("00" + hex).slice(-2); // push to array
-
+						const hex = byteArray[i].toString(16);
+						// pad with zeros to length 2
+						const paddedHex = ("00" + hex).slice(-2);
+						// push to array
 						hexParts.push(paddedHex);
-					} // join all the hex values of the elements into a single string
-
+					}
+					// join all the hex values of the elements into a single string
+					log.info('签名')
 					let h = hexParts.join("");
 					var verify = h + "/@jysafe.cn";
 					const encryptData = RSAEncrypt(verify);
+					log.info('请求OCR')
 					captchaOCR(encryptData, pic)
 						.then(res => {
-							if (200 == res.data.code) r(res.data.data.result);
-							else {
+							if (200 == res.data.code){
+								this.captchaCode = res.data.data.result;
+							}else {
 								uni.showToast({
 									icon: "none",
 									title: res.data.msg
@@ -638,7 +639,7 @@
 							});
 						});
 				} catch (err) {
-					console.log(err);
+					log.error('OCR识别失败', err)
 				}
 			},
 
