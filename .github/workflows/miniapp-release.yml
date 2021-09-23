@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Build CI
+name: Release
 
 #写法一：在push事件时触发构建
 #on: [push]
@@ -9,9 +9,8 @@ name: Build CI
 #写法二：在master分支的push操作时触发构建
 on:
     push:
-        branches: [master]
-    pull_request:
-        branches: [master]
+        tags:
+        - 'v*'
 
 jobs:
     build-wx-qq-ci: #job名称
@@ -24,6 +23,20 @@ jobs:
 
         steps:
             - uses: actions/checkout@v2
+
+            - name: Get version
+              id: get_version
+              uses: battila7/get-version-action@v2
+              # https://github.com/marketplace/actions/get-version
+
+            - name: Get notes
+              id: generate_notes
+              uses: anmarkoulis/commitizen-changelog-reader@master
+              with:
+                tag_name: ${{ github.ref }}
+                changelog: CHANGELOG.MD
+                # https://github.com/marketplace/actions/get-release-notes
+
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v1
               with:
@@ -34,26 +47,24 @@ jobs:
                   && sed -i 's|YOUR_PUBLIC_RSA_KEY|${{ secrets.YOUR_PUBLIC_RSA_KEY }}|' src/config.js
                   && sed -i 's/YOUR_CDN_SALT/${{ secrets.YOUR_CDN_SALT }}/' src/config.js
                   && sed -i 's/YOUR_QUERY_SALT/${{ secrets.YOUR_QUERY_SALT }}/' src/config.js
+                  && sed -i "s/'test';/'prod';/" src/config.js
                   && echo "${{ secrets.WX_UPLOAD_PRIVATE_KEY }}" > private.key
 
             - name: Install Dependencies
-              run: npm i && npm install miniprogram-ci
+              run: npm i && npm install miniprogram-ci minimist
 
             - name: Build App
               run: npm run build:mp-weixin-ci && npm run build:mp-qq-ci
 
             - name: Upload WX
-              run: node ./.github/workflows/wx-ci.js --version="2.0.0" --desc="移植至uniapp"
-
-            # - name: Update Experience URL
-            #   run: npm install jimp qrcode-reader && node ./.github/workflows/updateURL.js
+              run: node ./.github/workflows/wx-ci.js --version="${{ steps.get_version.outputs.version-without-v }}" --desc="${{join(fromJson(steps.generate_notes.outputs.notes).notes, '')}}"
 
             #第三步：上传小程序版本到管理端，并将此版本设置为体验版（设置体验版可选）
             - name: Upload QQ
               uses: docker://jiyecafe/qqminiapp_build:1.0.3
               env:
-                  PLUGIN_VERSION: 2.0.0
-                  PLUGIN_DESC: 移植至uniapp
+                  PLUGIN_VERSION: ${{ steps.get_version.outputs.version-without-v }}
+                  PLUGIN_DESC: ${{join(fromJson(steps.generate_notes.outputs.notes).notes, '')}}
                   PLUGIN_APPTOKEN: ${{ secrets.QQ_APPTOKEN }}
                   PLUGIN_BUILDUSER: ${{ github.actor }}
                   PLUGIN_EXPERIENCE: true

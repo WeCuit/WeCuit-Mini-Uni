@@ -19,7 +19,7 @@ const API_DOMAIN = {
   dev2: 'http://127.0.0.1:8080/WeCuit/Api',
   dev3: 'http://127.0.0.1:8080',
   test: 'https://test.cuit.api.jysafe.cn/v3',
-  prod1: 'https://cuit.api.jysafe.cn/v3',
+  prod: 'https://cuit.api.jysafe.cn/v3',
   prod2: 'https://cuit.api.jysafe.cn/v2'
 };
 module.exports = {

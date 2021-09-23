@@ -1,3 +1,5 @@
+const args = require('minimist')(process.argv.slice(2))
+
 const ci = require("miniprogram-ci");
 const project = new ci.Project({
     appid: "wxfa2ea65288e28233",
@@ -16,8 +18,8 @@ const project = new ci.Project({
     console.warn("==========上传==========")
     const uploadResult = await ci.upload({
         project,
-        version: "2.0.0",
-        desc: "移植至uniapp",
+        version: args['version'],
+        desc: args['desc'],
         setting: {
             es6: true,
         },
