@@ -14,7 +14,7 @@ on:
 
 jobs:
     build-wx-qq-ci: #job名称
-        timeout-minutes: 10    #设置超时时间10分钟
+        timeout-minutes: 20    #设置超时时间
         runs-on: ubuntu-latest #运行环境
 
         strategy:
@@ -34,7 +34,7 @@ jobs:
               uses: anmarkoulis/commitizen-changelog-reader@master
               with:
                 tag_name: ${{ github.ref }}
-                changelog: CHANGELOG.MD
+                changelog: CHANGELOG.md
                 # https://github.com/marketplace/actions/get-release-notes
 
             - name: Use Node.js ${{ matrix.node-version }}
@@ -53,8 +53,20 @@ jobs:
             - name: Install Dependencies
               run: npm i && npm install miniprogram-ci minimist
 
-            - name: Build App
-              run: npm run build:mp-weixin-ci && npm run build:mp-qq-ci
+            - name: Build WX App
+              uses: nick-invision/retry@v2
+              with:
+                timeout_seconds: 50
+                max_attempts: 3
+                command: npm run build:mp-weixin-ci
+                # https://github.com/marketplace/actions/retry-step
+
+            - name: Build QQ App
+              uses: nick-invision/retry@v2
+              with:
+                timeout_seconds: 50
+                max_attempts: 3
+                command: npm run build:mp-qq-ci
 
             - name: Upload WX
               run: node ./.github/workflows/wx-ci.js --version="${{ steps.get_version.outputs.version-without-v }}" --desc="${{join(fromJson(steps.generate_notes.outputs.notes).notes, '')}}"
