@@ -27,13 +27,15 @@ export default {
         color: "#03a9f4",
         icon: "welcome-ziyuan",
         text: "录取查询"
-      }, {
-        data: "guide/index",
-        size: 30,
-        color: "#03a9f4",
-        icon: "welcome-ditu",
-        text: "游览校园"
-      }]
+      },
+			// {
+   //      data: "guide/index",
+   //      size: 30,
+   //      color: "#03a9f4",
+   //      icon: "welcome-ditu",
+   //      text: "游览校园"
+   //    },
+			]
     };
   },
 

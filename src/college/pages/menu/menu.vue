@@ -23,31 +23,36 @@ const app = getApp();
 export default {
   data() {
     return {
-      menuList: [{
-        data: "introduce",
-        size: 30,
-        color: "#03a9f4",
-        icon: "icon-jianjie",
-        text: "学院简介"
-      }, {
+      menuList: [
+				// {
+    //     data: "introduce",
+    //     size: 30,
+    //     color: "#03a9f4",
+    //     icon: "icon-jianjie",
+    //     text: "学院简介"
+    //   }, 
+			{
         data: "newsList",
         size: 30,
         color: "#03a9f4",
         icon: "icon-zixun",
         text: "学院资讯"
-      }, {
-        data: "counselor",
-        size: 30,
-        color: "#03a9f4",
-        icon: "icon-fudaoyuanxinxi",
-        text: "辅导员"
-      }, {
-        data: "contact",
-        size: 30,
-        color: "#03a9f4",
-        icon: "icon-zixun",
-        text: "联系信息"
-      }],
+      },
+			// {
+   //      data: "counselor",
+   //      size: 30,
+   //      color: "#03a9f4",
+   //      icon: "icon-fudaoyuanxinxi",
+   //      text: "辅导员"
+   //    }, 
+			// {
+   //      data: "contact",
+   //      size: 30,
+   //      color: "#03a9f4",
+   //      icon: "icon-zixun",
+   //      text: "联系信息"
+   //    },
+			],
       college: "",
       collegeName: ""
     };
