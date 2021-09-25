@@ -42,7 +42,7 @@
             v-for="(item, index) in ['一','二','三','四','五','六','日']"
             :key="index"
             class="top-text"
-            :style="'color: ' + ((increment==0&&index+2==day_num)?'#009688':'black') + ';'"
+            :style="'color: ' + ((increment==0&&(index+2)%7==day_num)?'#009688':'black') + ';'"
           >周{{item}}</view>
         </view>
         <view>
@@ -188,7 +188,7 @@ export default {
       isFirstOpenSSO: true,
       week_num: "",
       week_list: [],
-      day_num: ""
+      day_num: 0
     };
   },
 
@@ -356,8 +356,8 @@ export default {
       var now = new Date();
       var diff_day_without_increment = parseInt(
         (now - app.globalData.start) / (1000 * 60 * 60 * 24)
-      ); // console.log("已开学：" + diff_day_without_increment + "---今天周" + (diff_day_without_increment % 7))
-
+      );
+			// console.log("已开学：" + diff_day_without_increment + "---今天周" + (diff_day_without_increment % 7))
       var diff_day = diff_day_without_increment + this.increment;
 
       if (diff_day < -7) {
