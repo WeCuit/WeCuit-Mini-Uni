@@ -368,7 +368,7 @@ export default {
       this.setData({
         increment: this.increment
       });
-      var week_num = parseInt(diff_day / 7 + 1);
+      var week_num = parseInt(diff_day / 7);
       var week_list = this.getWeekList(week_num);
       this.setData({
         week_num: week_num,
