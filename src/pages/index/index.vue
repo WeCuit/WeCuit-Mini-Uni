@@ -30,6 +30,7 @@
         </swiper-item>
       </swiper>
     </view>
+		<!-- #ifdef MP-QQ -->
     <!-- 群应用提示 -->
     <view class="groupApp" v-if="showGANotice">
       <view class="iconfont icon-yingyong" style="font-size:50rpx;padding:20rpx;"></view>
@@ -47,7 +48,9 @@
         >添加</button>
       </view>
     </view>
-    <view class="card">
+		<!-- #endif -->
+		
+		<view class="card">
       <view class="card-header">
         <view class="iconfont icon-chuangkou" style="align-self: flex-end;"></view>
         <view style="margin-left:15rpx">功能</view>
@@ -373,11 +376,12 @@ export default {
       });
     }
 
-    if ("object" == typeof qq) {
+			// #ifdef MP-QQ
       // qq 添加群应用
       this.checkGroupAdmin();
-    } // 一卡通余额
-
+			// #endif
+    
+		 // 一卡通余额
     uni.getStorage({
       key: "CARD_AccNum",
       success: res => {
@@ -504,7 +508,8 @@ export default {
         isShow: false
       });
     },
-    // 添加群应用部分显示判断
+    // #ifdef MP-QQ
+		// 添加群应用部分显示判断
     checkGroupAdmin: function() {
       let launchInfo = qq.getLaunchOptionsSync();
       let { entryDataHash } = launchInfo; // 注意，当小程序切后台后，再打开 entryDataHash 会改变，可用 qq.onAppShow 监听小程序切前台事件
@@ -550,6 +555,8 @@ export default {
     addGroupApp: function(e) {
       console.log("添加群应用的回调事件", e);
     },
+		// #endif
+		
     getClasses: function() {
       /**
        * 第几周-->第几天-->第几节-->持续时间

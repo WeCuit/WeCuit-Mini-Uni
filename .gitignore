@@ -21,6 +21,6 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
-*config.js
+*/config.js
 package-lock.json
 private.key

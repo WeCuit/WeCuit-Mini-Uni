@@ -79,11 +79,11 @@ export default {
     });
   },
   onShow: function() {
-    if ("undefined" !== typeof qq && 1 === getCurrentPages().length) {
-      this.setData({
-        fromShare: true
-      });
-    }
+		// #ifdef MP-QQ
+		if (1 === getCurrentPages().length) {
+				this.fromShare = true
+		}
+		// #endif
   },
 
   /**

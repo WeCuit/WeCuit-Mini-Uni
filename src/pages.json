@@ -238,14 +238,14 @@
             {
                 "pagePath" : "pages/homeNews/homeNews",
                 "text" : "资讯",
-                "iconPath" : "static/资讯.png",
-                "selectedIconPath" : "static/资讯-选中.png"
+                "iconPath" : "static/news.png",
+                "selectedIconPath" : "static/news-selected.png"
             },
             {
                 "pagePath" : "pages/my/my",
                 "text" : "个人中心",
-                "iconPath" : "static/个人中心.png",
-                "selectedIconPath" : "static/个人中心-选中.png"
+                "iconPath" : "static/my.png",
+                "selectedIconPath" : "static/my-selected.png"
             }
         ]
     },

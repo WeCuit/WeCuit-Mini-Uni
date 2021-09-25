@@ -2,7 +2,7 @@
 <view>
 <!-- pages/articleView/articleView.wxml -->
 <htmlParser :content="htmlText" @linktap="bindLinkHandle" domain="https://www.cuit.edu.cn/">
-  少女祈祷中......
+  内容加载中......
 </htmlParser>
 <!-- 验证码提示框 -->
 <view class="container" :hidden="captchaHidden">
@@ -116,11 +116,11 @@ export default {
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    if ("undefined" !== typeof qq && 1 === getCurrentPages().length) {
-      this.setData({
-        fromShare: true
-      });
+		// #ifdef MP-QQ
+    if (1 === getCurrentPages().length) {
+      this.fromShare = true
     }
+		// #endif
   },
 
   /**

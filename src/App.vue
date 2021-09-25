@@ -69,7 +69,12 @@
 				github: "",
 				group: ""
 			},
-			isADClose: "undefined" !== typeof qq ? false : true,
+			// #ifdef MP-WEIXIN
+			isADClose: true,
+			// #endif
+			// #ifdef MP-QQ
+			isADClose: false,
+			// #endif
 			autoLoginProcess: null
 		},
 		methods: {

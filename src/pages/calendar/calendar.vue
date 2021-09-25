@@ -76,11 +76,13 @@ export default {
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    if ("undefined" !== typeof qq && 1 === getCurrentPages().length) {
+		// #ifdef MP-QQ
+    if (1 === getCurrentPages().length) {
       this.setData({
         fromShare: true
       });
     }
+		// #endif
 
     this.getCalendar();
   },

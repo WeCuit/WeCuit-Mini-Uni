@@ -40,7 +40,7 @@
     "@dcloudio/uni-migration": "^2.0.0-32220210818002",
     "@dcloudio/uni-template-compiler": "^2.0.0-32220210818002",
     "@dcloudio/vue-cli-plugin-hbuilderx": "^2.0.0-32220210818002",
-    "@dcloudio/vue-cli-plugin-uni": "^2.0.0-32220210818002",
+    "@dcloudio/vue-cli-plugin-uni": "^2.0.0-32320210825001",
     "@dcloudio/vue-cli-plugin-uni-optimize": "^2.0.0-32220210818002",
     "@dcloudio/webpack-uni-mp-loader": "^2.0.0-32220210818002",
     "@dcloudio/webpack-uni-pages-loader": "^2.0.0-32220210818002",
@@ -52,6 +52,8 @@
     "mini-types": "*",
     "miniprogram-api-typings": "*",
     "postcss-comment": "^2.0.0",
+    "sass": "^1.42.1",
+    "sass-loader": "^10.1.1",
     "vue-template-compiler": "^2.6.11"
   },
   "scripts": {

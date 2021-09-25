@@ -319,12 +319,11 @@ export default {
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function() {
-    console.log("onReady");
-    if ("undefined" !== typeof qq && 1 === getCurrentPages().length) {
-      this.setData({
-        fromShare: true
-      });
-    }
+		// #ifdef MP-QQ
+		if (1 === getCurrentPages().length) {
+				this.fromShare = true
+		}
+		// #endif
     this.doSubmit2();
   },
 
