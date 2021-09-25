@@ -22,7 +22,7 @@
    <view class="grid-item-container">
         <block v-for="(item, j) in menuList_hk" :key="j">
           <view class="grid-item-child">
-            <view :data-path="item.path" :data-needlogin="item.needLogin" @tap="item.action">
+            <view :data-path="item.path" :data-needlogin="item.needLogin" @tap="bindAction">
               <image v-if="item.img" class="grid-item-icon" :src="'../../static/img/' + item.img" :style="'height:' + item.size + 'vw;width:' + item.size + 'vw'"></image>
               <view v-else :class="'grid-item-icon iconfont ' + item.icon" :style="'color:' + item.color"></view>
               <text class="grid-item-label">{{item.text}}</text>
