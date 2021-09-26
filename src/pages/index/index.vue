@@ -327,7 +327,8 @@ export default {
       maintenance: false,
       maintenanceBText: "",
       maintenanceOText: "",
-      isShow: false
+      isShow: false,
+			today: new Date()
     };
   },
 
@@ -573,15 +574,19 @@ export default {
         return;
       }
 
-      var now = new Date(); // 开学到现在的天数
-
+      var now = this.today;
+			
+			// 开学到现在的天数
       const diff_day_without_increment = parseInt(
         (now - app.globalData.start) / (1000 * 60 * 60 * 24)
-      ); // 当前周数
-
-      const week_num = parseInt(diff_day_without_increment / 7 + 1); // 今天周几
-
-      const today = diff_day_without_increment % 7; // console.log("----第" + week_num + "周，周" + today);
+      )-2;
+			
+      const week_num = parseInt(diff_day_without_increment / 7 + 1); // 当前周数
+			
+			// 今天周几
+      const today = (now.getDay() + 6) % 7 + 1;
+			
+			console.log(now.getHours() + "----第" + week_num + "周，周" + today);
       // [当前第几节课， 下节第几节课]
 
       const no = this.getNowClassStatus();
@@ -598,8 +603,9 @@ export default {
           nowAndNextClass: list
         });
         return;
-      } // 获取今天课程
-
+      }
+			
+			// 获取今天课程
       var today_list = [];
 
       for (var i = 0; i < app.globalData.classtable.length; i++) {
@@ -712,8 +718,8 @@ export default {
      * 返回  [当前课程序号， 下一节课程序号]
      */
     getNowClassStatus: function() {
-      const h = new Date().getHours();
-      const m = new Date().getMinutes();
+      const h = this.today.getHours();
+      const m = this.today.getMinutes();
       var hkg = true;
       if ("hkg" !== app.globalData.location) hkg = false;
 

@@ -29,6 +29,11 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
 
+            - name: Set Mini Outputs
+              id: get_mini
+              run: echo "::set-output name=version::2.0.1"
+              shell: bash
+
             - name: Generate Config & pkp
               run: \cp -rf src/config.example.js src/config.js
                   && sed -i 's|YOUR_PUBLIC_RSA_KEY|${{ secrets.YOUR_PUBLIC_RSA_KEY }}|' src/config.js
@@ -54,14 +59,14 @@ jobs:
                 command: npm run build:mp-qq-ci
 
             - name: Upload WX
-              run: node ./.github/workflows/wx-ci.js --version="2.0.0" --desc="移植至uniapp"
+              run: node ./.github/workflows/wx-ci.js --version="${{ steps.get_mini.outputs.version }}" --desc="${{ github.event.head_commit.message }}"
 
             #第三步：上传小程序版本到管理端，并将此版本设置为体验版（设置体验版可选）
             - name: Upload QQ
               uses: docker://jiyecafe/qqminiapp_build:1.0.3
               env:
-                  PLUGIN_VERSION: 2.0.0
-                  PLUGIN_DESC: 移植至uniapp
+                  PLUGIN_VERSION: ${{ steps.get_mini.outputs.version }}
+                  PLUGIN_DESC: "${{ github.event.head_commit.message }}"
                   PLUGIN_APPTOKEN: ${{ secrets.QQ_APPTOKEN }}
                   PLUGIN_BUILDUSER: ${{ github.actor }}
                   PLUGIN_EXPERIENCE: true
