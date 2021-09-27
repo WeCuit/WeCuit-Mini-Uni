@@ -344,6 +344,7 @@
  <style>
  	/* pages/attendance/edit.wxss */
  	@import "../common.css";
+ 	@import "./edit-wxa-auto-dark.css";
 
  	@media (prefers-color-scheme: dark) {
 
@@ -361,5 +362,4 @@
  		/* DarkMode 下的样式 end */
  	}
 
- 	@import "./edit-wxa-auto-dark.css";
  </style>

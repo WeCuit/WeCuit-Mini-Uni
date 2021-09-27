@@ -306,6 +306,7 @@ export default {
 };
 </script>
 <style>
+@import "./index-wxa-auto-dark.css";
 .movable-area {
   width: 100%;
   height: 100vh; }
@@ -502,6 +503,5 @@ export default {
     opacity: 0.2; }
   40% {
     opacity: 1; } }
-@import "./index-wxa-auto-dark.css";
 
 </style>

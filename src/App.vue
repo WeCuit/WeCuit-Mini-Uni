@@ -248,6 +248,7 @@
 </script>
 <style>
 	@import "./assets/wxss/iconfont.css";
+	@import "./app-wxa-auto-dark.css";
 
 	/* 悬浮按钮 */
 	.floatBtn {
@@ -280,5 +281,4 @@
 		/* DarkMode 下的样式 end */
 	}
 
-	@import "./app-wxa-auto-dark.css";
 </style>

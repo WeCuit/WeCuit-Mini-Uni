@@ -3,8 +3,8 @@
     <view class="top-wrap">
       <tab
         id="category"
-        :tab-data="categoryMenu"
-        :tab-cur="categoryCur"
+        :tabData="categoryMenu"
+        :tabcur="categoryCur"
         :size="80"
         :scroll="true"
         @change="toggleCategory"
@@ -159,7 +159,7 @@ export default {
     getList(type, currentPage) {
       let currentCur = this.categoryCur;
       let pageData = this.getCurrentData(currentCur);
-      console.log(pageData);
+      console.log("pageData", pageData);
       if (type !== "refresh" && pageData.end) return;
       pageData.requesting = true;
       this.setCurrentData(currentCur, pageData);
@@ -192,9 +192,7 @@ export default {
     setCurrentData(currentCur, pageData) {
       let categoryData = this.categoryData;
       categoryData[currentCur] = pageData;
-      this.setData({
-        categoryData: categoryData
-      });
+      this.categoryData = categoryData;
     },
 
     // 获取当前激活页面的数据
@@ -208,9 +206,7 @@ export default {
         duration: 0
       });
       setTimeout(() => {
-        this.setData({
-          categoryCur: e.detail.index
-        });
+        this.categoryCur = e.detail.index;
       }, 0);
     },
 
@@ -220,9 +216,7 @@ export default {
         duration: 300
       });
       setTimeout(() => {
-        this.setData({
-          categoryCur: e.detail.current
-        });
+        this.categoryCur = e.detail.current;
         let pageData = this.getCurrentData();
 
         if (pageData.listData.length === 0) {
@@ -253,6 +247,7 @@ export default {
 };
 </script>
 <style>
+@import "./homeNews-wxa-auto-dark.css";
 .top-wrap {
   position: fixed;
   left: 0;
@@ -316,5 +311,4 @@ swiper {
   color: #999999;
   font-size: 24rpx;
 }
-@import "./homeNews-wxa-auto-dark.css";
 </style>

@@ -361,6 +361,7 @@ export default {
 </script>
 <style>
 /* pages/articleView/articleView.wxss */
+ @import "./articleView-wxa-auto-dark.css";
 /* 验证码 */
 .float {
   height: 100%;
@@ -398,5 +399,4 @@ export default {
   margin-right: 10rpx;
  }
   
- @import "./articleView-wxa-auto-dark.css";
 </style>

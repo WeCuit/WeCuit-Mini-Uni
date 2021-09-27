@@ -128,6 +128,7 @@ export default {
 <style>
 /* pages/welcome/admit/admit.wxss */
 @import "../common.css";
+@import "./admit-wxa-auto-dark.css";
 
 .table{
     display: flex;
@@ -152,5 +153,4 @@ export default {
     background-color: #cccccc;
 }
 
-@import "./admit-wxa-auto-dark.css";
 </style>

@@ -31,8 +31,8 @@ export default {
       // 下划 line 的左边距离
       lineWidth: 0,
       // 下划 line 宽度
-      scrollLeft: 0 // scroll-view 左边滚动距离
-
+      scrollLeft: 0, // scroll-view 左边滚动距离
+			tabCur: 0
     };
   },
 
@@ -44,7 +44,7 @@ export default {
       default: () => []
     },
     // 是否可以超出滚动
-    tabCur: {
+    tabcur: {
       type: Number,
       default: 0
     },
@@ -70,7 +70,7 @@ export default {
       immediate: true,
       deep: true
     },
-    tabCur: {
+    tabcur: {
       handler: "tabCurChange",
       immediate: true
     },
@@ -103,13 +103,12 @@ export default {
      * @param needTransition: 下划线是否需要过渡动画, 第一次进来应设置为false
      */
     scrollByIndex(tabCur, needTransition = true) {
+			console.log('滑动到指定位置')
       let item = this.tabItems[tabCur];
       if (!item) return;
       let itemWidth = item.width || 0,
           itemLeft = item.left || 0;
-      this.setData({
-        needTransition: needTransition
-      });
+      this.needTransition = needTransition;
 
       if (this.scroll) {
         // 超出滚动的情况
@@ -137,8 +136,9 @@ export default {
     dataChange(newVal, oldVal) {
       this.setData({
         scrolling: false
-      }); // 异步加载数据时候, 延迟执行 init 方法, 防止基础库 2.7.1 版本及以下无法正确获取 dom 信息
-
+      });
+			
+			// 异步加载数据时候, 延迟执行 init 方法, 防止基础库 2.7.1 版本及以下无法正确获取 dom 信息
       setTimeout(() => this.init(), 0);
     },
 
@@ -146,6 +146,8 @@ export default {
      *  监听 tabCur 变化, 做对应处理
      */
     tabCurChange(newVal, oldVal) {
+			console.log("tabCurChange", newVal, oldVal)
+			this.tabCur = newVal
       this.scrollByIndex(newVal);
     },
 
@@ -183,6 +185,7 @@ export default {
 };
 </script>
 <style>
+    @import "./index-wxa-auto-dark.css";
 .tabs-wrap {
   width: 100%;
   height: 90rpx;
@@ -229,6 +232,5 @@ export default {
     display: inline-block; }
     .tabs__line.transition {
       transition: width 0.3s, transform 0.3s; }
-    @import "./index-wxa-auto-dark.css";
 
 </style>

@@ -224,6 +224,7 @@ export default {
 </script>
 <style>
 /* pages/grade/grade.wxss */
+@import "./grade-wxa-auto-dark.css";
 
 /* 新版 */
 .total_card {
@@ -275,5 +276,4 @@ export default {
 .grade_table_item .detail > view {
   width: 50%;
 }
-@import "./grade-wxa-auto-dark.css";
 </style>

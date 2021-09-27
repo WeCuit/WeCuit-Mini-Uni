@@ -146,6 +146,9 @@ export default {
 };
 </script>
 <style>
-/* pages/THEOL/THEOL.wxss */
 @import "../common.css";
+/* pages/THEOL/THEOL.wxss */
+/* Page{
+	
+} */
 </style>

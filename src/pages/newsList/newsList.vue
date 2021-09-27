@@ -4,7 +4,7 @@
       <tab
         id="category"
         :tab-data="categoryMenu"
-        :tab-cur="categoryCur"
+        :tabcur="categoryCur"
         :size="80"
         :scroll="true"
         @change="toggleCategory"
@@ -263,6 +263,7 @@ export default {
 };
 </script>
 <style>
+@import "./newsList-wxa-auto-dark.css";
 .top-wrap {
   position: fixed;
   left: 0;
@@ -326,5 +327,4 @@ swiper {
   color: #999999;
   font-size: 24rpx;
 }
-@import "./newsList-wxa-auto-dark.css";
 </style>

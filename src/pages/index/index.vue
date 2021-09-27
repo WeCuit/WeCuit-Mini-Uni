@@ -586,9 +586,9 @@ export default {
 			// 今天周几
       const today = (now.getDay() + 6) % 7 + 1;
 			
-			console.log(now.getHours() + "----第" + week_num + "周，周" + today);
-      // [当前第几节课， 下节第几节课]
-
+			//console.log(now.getHours() + "----第" + week_num + "周，周" + today);
+      
+			// [当前第几节课， 下节第几节课]
       const no = this.getNowClassStatus();
       var list = [];
 
@@ -921,6 +921,7 @@ export default {
 </script>
 <style>
 /**index.wxss**/
+@import "./index-wxa-auto-dark.css";
 
 .groupApp {
   display: flex;
@@ -1069,5 +1070,4 @@ page {
   /* DarkMode 下的样式 end */
 }
 
-@import "./index-wxa-auto-dark.css";
 </style>

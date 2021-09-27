@@ -700,6 +700,7 @@
 <style>
 	/* pages/my/sso/sso.wxss */
 	@import "../../common.css";
+	@import "./sso-wxa-auto-dark.css";
 
 	.login {
 		border: 5px;
@@ -769,5 +770,4 @@
 	}
 
 
-	@import "./sso-wxa-auto-dark.css";
 </style>
