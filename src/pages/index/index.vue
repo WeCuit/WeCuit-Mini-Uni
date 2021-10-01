@@ -135,7 +135,6 @@
       </view>
       <view
         class="card-body"
-        style="background: url(https://cuit.api.jysafe.cn/public/images/card-ecard.png) 100% 100%;"
       >
         <!-- 一卡通余额 -->
         <view v-if="ballance">

@@ -103,7 +103,6 @@ export default {
      * @param needTransition: 下划线是否需要过渡动画, 第一次进来应设置为false
      */
     scrollByIndex(tabCur, needTransition = true) {
-			console.log('滑动到指定位置')
       let item = this.tabItems[tabCur];
       if (!item) return;
       let itemWidth = item.width || 0,

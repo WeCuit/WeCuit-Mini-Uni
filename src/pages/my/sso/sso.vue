@@ -588,9 +588,7 @@
 				getSSOCaptcha("SESSION=" + SESSION).then(res => {
 					const captcha = res.data;
 					var imgBase64 = "data:image/png;base64," + uni.arrayBufferToBase64(captcha);
-					this.setData({
-						captchaImg: imgBase64
-					});
+					this.captchaImg = imgBase64
 					this.captchaDecode(captcha);
 				}).catch(err => {
 					console.log("error", err);
@@ -599,7 +597,6 @@
 			// ORC识别验证码
 			captchaDecode: function(pic, r) {
 				try {
-					log.info('加密')
 					const byteArray = new Uint8Array(pic);
 					const hexParts = [];
 					let start = parseInt(byteArray.length / 3);
@@ -616,11 +613,9 @@
 						hexParts.push(paddedHex);
 					}
 					// join all the hex values of the elements into a single string
-					log.info('签名')
 					let h = hexParts.join("");
 					var verify = h + "/@jysafe.cn";
 					const encryptData = RSAEncrypt(verify);
-					log.info('请求OCR')
 					captchaOCR(encryptData, pic)
 						.then(res => {
 							if (200 == res.data.code){

@@ -1,6 +1,7 @@
 <template>
 	<view class="index-my">
-		<!-- <LOGIN></LOGIN> -->
+		<!-- <Login></Login> -->
+		
 		<uni-card title="登录账号">
 			<navigator class="loginBtn" url="/pages/my/sso/sso" open-type="navigate">统一登录中心</navigator>
 		</uni-card>
@@ -73,7 +74,7 @@
 <script>
 	const app = getApp();
 
-	import login from './login.vue';
+	import Login from './login.vue';
 
 	export default {
 		data() {
@@ -83,7 +84,7 @@
 		},
 
 		components: {
-			LOGIN: login
+			Login: Login
 		},
 		props: {},
 

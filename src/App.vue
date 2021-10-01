@@ -14,29 +14,7 @@
 			this.initData(); // =========版本升级检测===============
 
 			this.checkUpdate();
-			this.loginClass = new login.DoLogin(this.globalData);
-			this.globalData.autoLoginProcess = Promise.resolve();
-			this.getUserInfo().then(res => {
-				if ("string" != typeof res.openid) {
-					uni.showToast({
-						icon: 'none',
-						title: '用户数据获取异常，请重启程序'
-					});
-				}
-
-				this.globalData.openid = res.openid;
-				this.globalData.accountInfo.isAdmin = res.isAdmin;
-
-				if (this.globalData.accountInfo.isAutoLogin) {
-					uni.showLoading({
-						title: '自动登录中~'
-					});
-					this.globalData.autoLoginProcess = this.loginClass.autoLogin();
-				} else {
-					this.globalData.autoLoginProcess = Promise.resolve();
-					console.log("未启用自动登录");
-				}
-			}).catch(e => {});
+			
 		},
 		// 小程序发生脚本错误或 API 调用报错时触发。
 		onError: function(e) {
@@ -51,7 +29,6 @@
 			location: null,
 			openid: "",
 			accountInfo: {
-				isAdmin: false,
 				userId: "",
 				userPass: "",
 				vpnPass: "",
@@ -78,7 +55,6 @@
 			autoLoginProcess: null
 		},
 		methods: {
-
 			// 初始化数据
 			initData: function() {
 				uni.getSystemInfo({
@@ -86,11 +62,9 @@
 						this.globalData.windowHeight = res.windowHeight;
 						this.globalData.windowWidth = res.windowWidth;
 					},
-
 					fail(err) {
 						console.log(err);
 					}
-
 				});
 				let ai = uni.getStorageSync("accountInfo");
 				if (ai) this.globalData.accountInfo = ai;
@@ -153,12 +127,11 @@
 						}
 					});
 				} // 课程表数据
-
-
 				this.globalData.start = uni.getStorageSync("start");
 				this.globalData.classtable = uni.getStorageSync("classtable");
 				this.globalData.location = uni.getStorageSync("location"); // 初始化数据end
 			},
+			
 			// =========版本升级检测===============
 			checkUpdate: function() {
 				const updateManager = uni.getUpdateManager();
@@ -178,68 +151,6 @@
 							}
 						}
 
-					});
-				});
-			},
-			/**
-			 * 获取用户属性
-			 *
-			 * isAdmin, openid
-			 */
-			getUserInfo: function() {
-				return new Promise((resolve, reject) => {
-					uni.getStorage({
-						key: "UserInfo",
-						success: res => {
-							// 本地有存储信息就直接用
-							if (res.data) {
-								/**
-								 * {
-								 *    isAdmin: boolean,
-								 *    openid: *****
-								 * }
-								 */
-								resolve(res.data);
-							}
-						},
-						fail: err => {
-							console.error(err); // 本地信息获取失败，远程获取
-
-							this.login().then(code => {
-								getUserInfo(code).then(data => {
-									if ("object" == typeof data) {
-										uni.setStorage({
-											key: "UserInfo",
-											data: data.info
-										});
-										/**
-										 * {
-										 *    isAdmin: boolean,
-										 *    openid: *****
-										 * }
-										 */
-
-										resolve(data.info);
-									} else {
-										reject(data);
-									}
-								});
-							});
-						}
-					});
-				});
-			},
-
-			login: function() {
-				return new Promise((resolve, reject) => {
-					uni.login({
-						success: res => {
-							if (res.code) resolve(res.code);
-							else reject(res);
-						},
-						fail: err => {
-							reject(err);
-						}
 					});
 				});
 			},
