@@ -3,25 +3,25 @@ const log = uni.getRealtimeLogManager ? uni.getRealtimeLogManager() : null;
 module.exports = {
   debug() {
     if (!log) return;
-		if(debug) console.log(arguments);
+		if(debug) console.log(...arguments);
     log.debug.apply(log, arguments);
   },
 
   info() {
     if (!log) return;
-		if(debug) console.info(arguments);
+		if(debug) console.info(...arguments);
     log.info.apply(log, arguments);
   },
 
   warn() {
     if (!log) return;
-		if(debug) console.warn(arguments);
+		if(debug) console.warn(...arguments);
     log.warn.apply(log, arguments);
   },
 
   error() {
     if (!log) return;
-		if(debug) console.error(arguments);
+		if(debug) console.error(...arguments);
     log.error.apply(log, arguments);
   },
 

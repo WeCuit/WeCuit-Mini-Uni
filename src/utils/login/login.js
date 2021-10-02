@@ -1,366 +1,243 @@
 const {
 	RSAEncrypt
 } = require("../rsa/index.js");
-
 const config = require("../../config.js");
-
 const log = require("../log.js");
-
 const XMLParser = require('@xmldom/xmldom')
-
-const REQUEST = require("../request.js");
-
+const request = require("../request.js");
+const RSA = require('../rsa/wx_rsa.js')
 const xmlParser = new XMLParser.DOMParser();
-var loginFailed = 0;
+let loginFailed = 0;
 
-class LOGIN {
-	constructor(globalData) {
-		this.session = globalData.sessionInfo;
-		this.account = globalData.accountInfo;
-		this.header = {
-			"content-type": "application/x-www-form-urlencoded"
-		};
-		this.API = globalData.API_DOMAIN;
-		this.SSO = {
-			SESSION: "",
-			captcha: "",
-			execution: ""
-		};
-		this.WEBVPN = {
-			isNeedCaptcha: 0
-		};
-	}
-
-	ccDoLogin() {
+// 计算中心
+const Compute = {
+	doLogin: (stuId, stuPass) => {
 		return request.post("/Jszx/loginRSAv1/", {
-				userId: this.account.userId,
-				userPass: RSAEncrypt(this.account.userPass)
+				userId: stuId,
+				userPass: RSAEncrypt(stuPass)
 			})
-			.then(res => {
-				const {
-					data
-				} = res;
-				this.session.JSZX_cookie = data.cookie;
+	},
+	checkLogin: (cookie) => request.post("/Jszx/checkLogin/", {
+		cookie
+	}).then(res=>{
+		return res.data.data.login?Promise.reject(0):Promise.resolve
+	})
+}
+
+const AutoLogin = {
+	Compute:async (account, session)=>{
+		try{
+			const check = await Compute.checkLogin(session.JSZX_cookie);
+			const login = await Compute.doLogin(account.userId, account.userPass)
+			session.JSZX_cookie = login?.data?.data?.cookie??null
+			if(session.JSZX_cookie){
 				uni.setStorage({
 					key: "JSZX_cookie",
-					data: data.cookie
-				});
-			});
-	}
-
-	ccCheckLogin() {
-		return request.post("/Jszx/checkLogin/", {
-			cookie: this.session.JSZX_cookie
-		})
-	}
-
-	ccAutoLogin(r) {
-		this.ccCheckLogin().then(() => {
-			if (r) r();
-		}).catch(err => {
-			if (10511 == err.errorCode) {
-				uni.showToast({
-					icon: "none",
-					title: err.errMsg
-				});
-			} else if (2000 != err.errorCode) {
-				console.log("计算中心未登录，将尝试进行登录操作");
-				return this.ccDoLogin().then(res => {
-					console.log(res);
-					if (r) r();
-				}).catch(err => {
-					if (10511 == err.errorCode) {
-						uni.showToast({
-							icon: "none",
-							title: err.errMsg
-						});
-					}
+					data: session.JSZX_cookie
 				});
 			}
-		});
-	}
-
-	jwglAutoLogin(r) {
-		this.jwglCheckLogin().then(data => {
-			console.log("JWGL Already Login");
-			if (r) r();
-		}).catch(err => {
-			this.jwglDoLogin().then(data => {
-				this.session.JWGL_cookie = data.cookie;
-				uni.setStorage({
-					key: "JWGL_cookie",
-					data: data.cookie
-				});
-				if (r) r();
-			});
-		});
-	}
-
-	jwglCheckLogin() {
-		console.log("教务管理登录检测");
-		return request.post("/Jwgl/loginCheck", {
-			cookie: this.session.JWGL_cookie + "; TWFID=" + this.session.TWFID
-		})
-	}
-
-	jwglDoLogin() {
-		console.log("教务管理登录操作");
-		return request.post("/Jwgl/login", {
-			cookie: "TGC=" + this.session.SSO_TGC + "; TWFID=" + this.session.TWFID
-		});
-	}
-
-	getAdminTWFID() {
-		return new Promise((resolve, reject) => {
-			uni.login({
-				success: res => {
-					if (res.code) {
-						// request
-						request.get("/Sys/getAdminTWFID", {
-							code: res.code
-						}).then(data => {
-							this.session.TWFID = data.twfid;
-							resolve();
-						});
-					} else {
-						reject(res);
-					}
-				},
-				fail: err => {
-					reject(err);
-				}
-			});
-		});
-	}
-
-	webVpnAuth(isNeedCaptcha, TWFID) {
-		return new Promise((resolve, reject) => {
-			// https://webvpn.cuit.edu.cn/por/login_auth.csp?apiversion=1
-			uni.request({
-				url: "https://webvpn.cuit.edu.cn/por/login_auth.csp?apiversion=1",
-				//仅为示例，并非真实的接口地址
-				header: {
-					cookie: "language=zh_CN; privacy=1; ENABLE_RANDCODE=" + isNeedCaptcha +
-						";TWFID=" + TWFID
-				},
-				success: res => {
-					var doc = xmlParser.parseFromString(res.data);
-					var randCode = doc.getElementsByTagName("CSRF_RAND_CODE")[0].firstChild
-						.data;
-					var msg = doc.getElementsByTagName("Message")[0].firstChild.data;
-					var TwfID = doc.getElementsByTagName("TwfID")[0].firstChild.data;
-					this.session.TWFID = TwfID;
-					var RSA_ENCRYPT_KEY = doc.getElementsByTagName("RSA_ENCRYPT_KEY")[0]
-						.firstChild.data;
-					var RSA_ENCRYPT_EXP = doc.getElementsByTagName("RSA_ENCRYPT_EXP")[0]
-						.firstChild.data;
-
-					if (msg == "login auth success") {
-						var auth = {
-							rc: randCode,
-							TwfID: TwfID,
-							RSA_ENCRYPT_KEY: RSA_ENCRYPT_KEY,
-							RSA_ENCRYPT_EXP: parseInt(RSA_ENCRYPT_EXP)
-						};
-						resolve(auth);
-					} else {
-						reject(2004);
-					}
-				}
-			});
-		});
-	}
-
-	webVpnLogin(auth) {
-		return new Promise((resolve, reject) => {
-			uni.request({
-				url: "https://webvpn.cuit.edu.cn/por/login_psw.csp?anti_replay=1&encrypt=1&apiversion=1",
-				method: "POST",
-				data: {
-					mitm_result: "",
-					svpn_req_randcode: auth.rc,
-					svpn_name: this.account.userId,
-					svpn_password: auth.encrypted_pwd,
-					svpn_rand_code: ""
-				},
-				header: {
-					"content-type": "application/x-www-form-urlencoded",
-					cookie: "language=zh_CN; privacy=1; ENABLE_RANDCODE=" + this.WEBVPN
-						.isNeedCaptcha + "; TWFID=" + auth.TwfID
-				},
-
-				success(res) {
-					var ret = {};
-					var doc = xmlParser.parseFromString(res.data);
-					var msg = doc.getElementsByTagName("Message")[0].firstChild.data;
-					var cookie = "";
-					if ("undefined" != typeof res.header["set-cookie"]) cookie = res.header[
-						"set-cookie"];
-					else if ("undefined" != typeof res.header["Set-Cookie"]) cookie = res.header[
-						"Set-Cookie"];
-
-					if (msg == "radius auth succ") {
-						ret["status"] = 200;
-						var TWFID = doc.getElementsByTagName("TwfID")[0].firstChild.data;
-						resolve(TWFID);
-					} else {
-						ret["doc"] = doc;
-						if (-1 != cookie.indexOf("ENABLE_RANDCODE=1")) ret["needCaptcha"] = true;
-						reject(ret);
-					}
-				}
-
-			});
-		});
-	}
-
-	webVpnCheckLogin() {
-		return new Promise((resolve, reject) => {
-			uni.request({
-				url: "https://webvpn.cuit.edu.cn/por/svpnSetting.csp?apiversion=1",
-				header: {
-					cookie: "language=zh_CN; privacy=1; ENABLE_RANDCODE=" + this.WEBVPN
-						.isNeedCaptcha + "; TWFID=" + this.session.TWFID
-				},
-
-				success(res) {
-					var doc = xmlParser.parseFromString(res.data);
-					var msg = doc.getElementsByTagName("Message")[0].firstChild.data;
-					resolve(msg);
-				}
-
-			});
-		});
-	}
-
-	webVpnAutoLogin(r) {
-		let temp = null;
-
-		if (this.account.isAdmin) {
-			temp = this.getAdminTWFID();
-		} else {
-			temp = Promise.resolve();
+			
+		}catch(err){
+			if(err === 0)return;
+			log.error('JSZX err -> ', err)
 		}
-
-		temp.then(() => {
-			return this.webVpnCheckLogin();
-		}).then(msg => {
-			if ("auth succ." == msg) {
-				console.log("WEBVPN 已登录");
-				r();
-				throw -1;
-			} else {
-				console.log("WEBVPN 未登录");
-				return this.webVpnAuth(this.WEBVPN.isNeedCaptcha, this.session.TWFID);
-			}
-		}).then(res => {
-			console.log("WEBVPN 准备登录");
-			var encrypt = new RSA.RSAKey();
-			encrypt.setPublic(res.RSA_ENCRYPT_KEY, res.RSA_ENCRYPT_EXP.toString(16));
-			res["encrypted_pwd"] = encrypt.encrypt(this.account.vpnPass ? this.account.vpnPass : this
-				.account.userPass + "_" + res.rc);
-			return this.webVpnLogin(res);
-		}).then(res => {
-			console.log("WebVpn登录成功"); // 更新TWFID
-
-			if (res != this.session.TWFID) {
-				this.session.TWFID = res;
-				uni.setStorage({
-					data: res,
-					key: "TWFID"
-				});
-			}
-
-			r();
-		}).catch(err => {
-			console.log(err);
-			if ("object" != typeof err) return;
-			var doc = err.doc;
-			var code = doc.getElementsByTagName("ErrorCode")[0].firstChild.data;
-
-			if (code == 20021) {
-				console.log("已是登录状态");
-				r();
-			} else if (code == 20004) {
-				console.log("账号信息错误");
-
-				if (err.needCaptcha) { // _this.getCaptcha();
-				}
-			} else if (code == 20041) {
-				console.log("错误次数过多"); // _this.getCaptcha();
-			} else if (code == 20023) {
-				console.log("验证码错误"); // _this.getCaptcha();
-			}
-		});
-	} // 统一登录中心
-
-
-	ssoAutoLogin(r) {
-		this.ssoCheckLogin().then(res => {
-			this.SSO.SESSION = res.SESSION; // 获取验证码
-
-			return this.ssoGetCaptcha(res.SESSION);
-		}).then(res => {
-			// 取得验证码
-			var cookie = "";
-			if ("undefined" != typeof res.header["set-cookie"]) cookie = res.header["set-cookie"];
-			else if ("undefined" != typeof res.header["Set-Cookie"]) cookie = res.header["Set-Cookie"];
-
-			if (-1 != cookie.indexOf("SESSION")) {
-				this.SSO.SESSION = cookie.match(/SESSION=(.*);/)[1];
-			} // 识别验证码
-
-
-			return this.captchaDecode(res.data);
-		}).then(code => {
-			// 尝试登录
-			return this.ssoDoLogin({
-				SSO_SESSION: this.SSO.SESSION,
-				userId: this.account.userId,
-				userPass: this.account.userPass,
-				captcha: code,
-				execution: this.SSO.execution
-			});
-		}).then(res => {
-			var tgc = res.match(/TGC=(.*?);/);
-			this.session.SSO_TGC = tgc[1];
-			uni.setStorage({
-				data: tgc[1],
-				key: "SSO_TGC"
-			});
-			console.log("SSO Login Success");
-			r();
-		}).catch(err => {
-			console.log(err);
-
-			if (err.code == 12405) {
-				loginFailed++;
-
-				if (loginFailed <= 3) {
-					console.log("第" + loginFailed + "次重试");
-					this.autoLogin();
-				}
-
-				return;
-			} else if (12200 == err.code) {
-				console.log("SSO Already Login");
-				r();
-			} else if (12401 === err.code) {
-				uni.showToast({
-					icon: "none",
-					title: err.errMsg
-				});
-				uni.setStorage({
-					key: "isAutoLogin",
-					data: false
-				});
-			}
-		});
 	}
+}
 
-	ssoDoLogin(data) {
+// 教务管理
+const JWGL = {
+	checkLogin: (twfid, cookie) => request.post("/Jwgl/loginCheck", {
+		cookie: `${cookie}; TWFID=${twfid}`
+	}).then(res=>{
+		const {data} = res.data
+		return data.login?Promise.reject(0): Promise.resolve()
+	}),
+	doLogin: (twfid, tgc) => request.post("/Jwgl/login", {
+		cookie: `TGC=${tgc}; TWFID=${twfid}`
+	})
+}
+
+AutoLogin.JWGL = async (account, session)=>{
+	try{
+		const check = await JWGL.checkLogin(session.TWFID, session.JWGL_cookie)
+		const login = await JWGL.doLogin(session.TWFID, session.SSO_TGC)
+		session.JWGL_cookie = login?.data?.data?.cookie??''
+		uni.setStorage({
+			key: "JWGL_cookie",
+			data: session.JWGL_cookie
+		});
+	}catch(err){
+		if(err === 0)return;
+		log.error('JWGL err -> ', err)
+	}
+}
+
+// WEBVPN  -  TODO
+const WEBVPN = {
+	auth(isNeedCaptcha, TWFID) {
+		return request.get('https://webvpn.cuit.edu.cn/por/login_auth.csp', {apiversion:1},
+			{
+				header: {
+					cookie: `language=zh_CN; privacy=1; ENABLE_RANDCODE=${isNeedCaptcha};TWFID=${TWFID}`
+				}
+			}
+		).then(res=>{
+			const doc = xmlParser.parseFromString(res.data);
+			let randCode = doc.getElementsByTagName("CSRF_RAND_CODE")[0].firstChild
+				.data;
+			let msg = doc.getElementsByTagName("Message")[0].firstChild.data;
+			let TwfID = doc.getElementsByTagName("TwfID")[0].firstChild.data;
+			let RSA_ENCRYPT_KEY = doc.getElementsByTagName("RSA_ENCRYPT_KEY")[0]
+				.firstChild.data;
+			let RSA_ENCRYPT_EXP = doc.getElementsByTagName("RSA_ENCRYPT_EXP")[0]
+				.firstChild.data;
+
+			if (msg == "login auth success") {
+				let auth = {
+					rc: randCode,
+					TwfID,
+					RSA_ENCRYPT_KEY,
+					RSA_ENCRYPT_EXP: parseInt(RSA_ENCRYPT_EXP)
+				};
+				return Promise.resolve(auth);
+			} else {
+				return Promise.reject(2004);
+			}
+		})
+	},
+	doLogin(userId, userPass, auth) {
+		return request.post('https://webvpn.cuit.edu.cn/por/login_psw.csp?anti_replay=1&encrypt=1&apiversion=1',
+			{
+				mitm_result: "",
+				svpn_req_randcode: auth.rc,
+				svpn_name: userId,
+				svpn_password: userPass,
+				svpn_rand_code: ""
+			},
+			{
+				header: {
+					"Content-Type": "application/x-www-form-urlencoded",
+					cookie: `language=zh_CN; privacy=1; ENABLE_RANDCODE=0; TWFID=${auth.TwfID}`
+				}
+			}
+		).then(res=>{
+			let ret = {};
+			let doc = xmlParser.parseFromString(res.data);
+			let msg = doc.getElementsByTagName("Message")[0].firstChild.data;
+			let cookie = "";
+			if ("undefined" != typeof res.header["set-cookie"]) cookie = res.header[
+				"set-cookie"];
+			else if ("undefined" != typeof res.header["Set-Cookie"]) cookie = res.header[
+				"Set-Cookie"];
+			
+			if (msg == "radius auth succ") {
+				ret["status"] = 200;
+				let TWFID = doc.getElementsByTagName("TwfID")[0].firstChild.data;
+				return Promise.resolve(TWFID);
+			} else {
+				ret["doc"] = doc;
+				let code = doc.getElementsByTagName("ErrorCode")[0].firstChild.data;
+				
+				if (code == 20021) {
+					console.log("已是登录状态");
+				} else if (code == 20004) {
+					console.log("账号信息错误");
+				} else if (code == 20041) {
+					console.log("错误次数过多");
+				} else if (code == 20023) {
+					console.log("验证码错误");
+				}
+				
+				if (-1 != cookie.indexOf("ENABLE_RANDCODE=1")) ret["needCaptcha"] = true;
+				return Promise.reject(ret);
+			}
+		})
+	},
+	checkLogin(isNeedCaptcha, twfid) {
+		// 已登录 ---> 抛异常
+		return request.get('https://webvpn.cuit.edu.cn/por/svpnSetting.csp?apiversion=1',null,
+			{
+				header: {
+					cookie: `language=zh_CN; privacy=1; ENABLE_RANDCODE=${isNeedCaptcha}; TWFID=${twfid}`
+				},
+			}
+		).then(res=>{
+				const doc = xmlParser.parseFromString(res.data);
+				let msg = doc.getElementsByTagName("Message")[0].firstChild.data;
+				if ("auth succ." == msg) {
+					return Promise.reject(0)
+				} else {
+					return Promise.resolve(msg)
+				}
+		})
+	}
+}
+
+AutoLogin.WEBVPN = async (account, session)=>{
+	try{
+		// check 
+		const check = await WEBVPN.checkLogin(0, session.TWFID);
+		const auth = await WEBVPN.auth(0, session.TWFID);
+		session.TWFID = auth.TwfID
+		let encrypt = new RSA.RSAKey();
+		encrypt.setPublic(auth.RSA_ENCRYPT_KEY, auth.RSA_ENCRYPT_EXP.toString(16));
+		let userPass = encrypt.encrypt(account.vpnPass || (account.userPass + "_" + auth.rc));
+		const twfid = await WEBVPN.doLogin(account.userId, userPass, auth)
+		session.TWFID = twfid
+		uni.setStorage({
+			key: "TWFID",
+			data: twfid
+		});
+	}catch(err){
+		if(err === 0)return;
+		log.error('webvpn err -> ', err)
+	}
+	
+}
+
+/**
+ * ORC识别验证码
+ *
+ * @param pic arraybuffer
+ *
+ */
+const CaptchaDecode = (pic) => {
+	try {
+		const byteArray = new Uint8Array(pic);
+		const hexParts = [];
+		let start = parseInt(byteArray.length / 3);
+		let end = parseInt(byteArray.length / 2);
+
+		while (end - start > 20) end = parseInt((start + end) / 2);
+
+		for (let i = start; i < end; i++) {
+			// convert value to hexadecimal
+			const hex = byteArray[i].toString(16); // pad with zeros to length 2
+
+			const paddedHex = ("00" + hex).slice(-2); // push to array
+
+			hexParts.push(paddedHex);
+		} // join all the hex values of the elements into a single string
+
+
+		let h = hexParts.join("");
+		var verify = h + "/@jysafe.cn";
+		
+		return request.post('/Tool/captchaDecodeV2', pic, {
+				header: {
+					"x-verify": RSAEncrypt(verify)
+				},
+		})
+	} catch (err) {
+		console.log('CaptchaDecode err -> ', err);
+	}
+}
+
+// 统一登录中心
+const SSO = {
+	doLogin(data) {
 		if (0 == data.userId.length || 0 == data.userPass.length) {
-			reject({
+			return Promise.reject({
 				code: -3,
 				errMsg: "账号密码格式不正确"
 			});
@@ -380,218 +257,184 @@ class LOGIN {
 				"Content-Type": "application/x-www-form-urlencoded"
 			}
 		}).then(res => {
-			if (!res.data) resolve(-1);
+			if (!res.data) resolve({code: -1, msg: '响应体为空'});
 			const html = res.data;
 
 			if ("string" !== typeof html) {
 				return Promise.reject({
-					code: 0,
-					errMsg: "预期之外的异常"
+					code: -1,
+					msg: "预期之外的异常"
 				});
 			}
 
 			if (html.indexOf("已经成功登统一认证中心") != -1) {
 				// 处理cookie
 				var cookie = "";
-				if ("undefined" != typeof res.header["set-cookie"]) cookie = res.header[
-					"set-cookie"];
-				else if ("undefined" != typeof res.header["Set-Cookie"]) cookie = res
-					.header["Set-Cookie"];
+				if ("undefined" != typeof res.header["set-cookie"])
+					cookie = res.header["set-cookie"];
+				else if ("undefined" != typeof res.header["Set-Cookie"])
+				 cookie = res.header["Set-Cookie"];
 				return Promise.resolve(cookie);
 			} else if (html.indexOf("用户名或密码错误") != -1) {
 				return Promise.reject({
 					code: 12401,
-					errMsg: "用户名或密码错误"
+					msg: "用户名或密码错误"
 				});
 			} else if (html.indexOf("必须录入") != -1) {
 				return Promise.reject({
 					code: 12401,
-					errMsg: "数据缺失"
+					msg: "数据缺失"
 				});
 			} else if (html.indexOf("账号被锁定") != -1) {
 				var unlockTime = html.match(/账号被锁定，请在(.*?)后重新登录/)[1];
 				return Promise.reject({
 					code: 12403,
-					errMsg: "账号被锁定至" + unlockTime
+					msg: "账号被锁定至" + unlockTime
 				});
 			} else if (html.indexOf("禁用") != -1) {
 				return Promise.reject({
 					code: 12403,
-					errMsg: "账号被禁用！"
+					msg: "账号被禁用！"
 				});
 			} else if (html.indexOf("必须录入验证码") != -1 || -1 != html.indexOf("验证码无效")) {
 				return Promise.resolve({
 					code: 12405,
-					errMsg: "验证码有误"
+					msg: "验证码有误"
 				});
 			} else {
 				return Promise.reject({
 					code: 0,
-					errMsg: '未知异常'
+					msg: '未知异常'
 				});
 			}
 		})
 
-	}
-
-	ssoGetCaptcha(SESSION) {
+	},
+	getCaptcha(SESSION) {
 		console.log("SSO GET CAPTCHA.");
-		return new Promise((resolve, reject) => {
-			uni.request({
-				url: "https://sso.cuit.edu.cn/authserver/captcha",
-				responseType: "arraybuffer",
-				header: {
-					cookie: "SESSION=" + SESSION
-				},
-
-				success(res) {
-					resolve(res);
-				},
-
-				fail: err => {
-					reject(-2);
-				}
-			});
-		});
-	}
-
-	ssoCheckLogin() {
-		return new Promise((resolve, reject) => {
-			uni.request({
-				url: "https://sso.cuit.edu.cn/authserver/login",
-				header: {
-					cookie: "SESSION=" + this.session.SSO_SESSION + "; TGC=" + this.session.SSO_TGC
-				},
-				success: res => {
-					var ret = {};
-
-					if (res.data.indexOf("已经成功登统一认证中心") != -1) {
-						reject({
-							code: 12200
-						});
-					} else if (res.data.indexOf("成都信息工程大学统一身份") != -1) {
-						console.log("SSO NOT LOGIN."); // 未登录统一认证中心
-
-						ret["status"] = 12401;
-						ret["SESSION"] = null;
-						var cookie = "";
-						if ("undefined" != typeof res.header["set-cookie"]) cookie = res.header[
-							"set-cookie"];
-						else if ("undefined" != typeof res.header["Set-Cookie"]) cookie = res
-							.header["Set-Cookie"];
-
-						if (-1 != cookie.indexOf("SESSION")) {
-							// SESSION需要更新
-							ret["SESSION"] = cookie.match(/SESSION=(.*);/)[1];
-						}
-
-						ret["execution"] = null;
-
-						if (res.data.indexOf("execution") != -1) {
-							this.SSO.execution = ret["execution"] = res.data.match(
-								/" name="execution" value="(.*?)" \/>/)[1];
-						}
-
-						resolve(ret);
-					}
-				}
-			});
-		});
-	}
-
-	autoLogin() {
-		if (0 == this.account.userId.length || 0 == this.account.userPass.length) {
-			console.log({
-				code: -3,
-				errMsg: "账号密码格式不正确"
-			});
-			return null;
-		}
-
-		console.log("Auto Login Start");
-		return new Promise((resolve, reject) => {
-			this.ssoAutoLogin(() => {
-				this.ccAutoLogin(() => {
-					this.webVpnAutoLogin(() => {
-						this.jwglAutoLogin(() => {
-							uni.showToast({
-								title: "自动登录成功！"
-							});
-							resolve();
-						});
-					});
-				});
-			});
-		});
-	}
+		return request.get('https://sso.cuit.edu.cn/authserver/captcha', null, {
+			responseType: 'arraybuffer',
+			header: {
+				cookie: `SESSION=${SESSION}`
+			},
+		})
+	},
 	/**
-	 * ORC识别验证码
-	 *
-	 * @param pic arraybuffer
-	 *
+	 * @param {Object} sso_session
+	 * @param {Object} tgc
+	 * reject 0 已登录
 	 */
-
-
-	captchaDecode(pic) {
-		try {
-			const byteArray = new Uint8Array(pic);
-			const hexParts = [];
-			let start = parseInt(byteArray.length / 3);
-			let end = parseInt(byteArray.length / 2);
-
-			while (end - start > 20) end = parseInt((start + end) / 2);
-
-			for (let i = start; i < end; i++) {
-				// convert value to hexadecimal
-				const hex = byteArray[i].toString(16); // pad with zeros to length 2
-
-				const paddedHex = ("00" + hex).slice(-2); // push to array
-
-				hexParts.push(paddedHex);
-			} // join all the hex values of the elements into a single string
-
-
-			let h = hexParts.join("");
-			var verify = h + "/@jysafe.cn";
-			return new Promise((resolve, reject) => {
-				uni.request({
-					url: this.API + "/Tool/captchaDecodeV2",
-					method: "POST",
-					header: {
-						"x-verify": RSAEncrypt(verify)
-					},
-					data: pic,
-					success: res => {
-						if (2000 == res.data.status) resolve(res.data.result);
-						else if (res.data.errMsg) {
-							uni.showToast({
-								icon: "none",
-								title: res.data.errMsg
-							});
-						} else {
-							console.log(res.data);
-							uni.showToast({
-								icon: "none",
-								title: "未知错误"
-							});
-						}
-						return;
-					},
-					fail: err => {
-						reject({
-							code: -2,
-							errMsg: err
-						});
-					}
-				});
-			});
-		} catch (err) {
-			console.log(err);
-		}
+	checkLogin(sso_session, tgc) {
+		return request.get('https://sso.cuit.edu.cn/authserver/login', null, {
+			header: {
+				cookie: `SESSION=${sso_session}; TGC=${tgc}`
+			},
+		}).then(res=>{
+			let ret = {};
+			
+			if (res.data.indexOf("已经成功登统一认证中心") != -1) {
+				return Promise.reject({code:0});
+			} else if (res.data.indexOf("成都信息工程大学统一身份") != -1) {
+				log.info("SSO NOT LOGIN."); // 未登录统一认证中心
+			
+				ret["status"] = 401;
+				ret["session"] = sso_session;
+				let cookie = "";
+				if ("undefined" != typeof res.header["set-cookie"]) cookie = res.header[
+					"set-cookie"];
+				else if ("undefined" != typeof res.header["Set-Cookie"]) cookie = res
+					.header["Set-Cookie"];
+			
+				if (-1 != cookie.indexOf("SESSION")) {
+					// session需要更新
+					ret["session"] = cookie.match(/SESSION=(.*);/)[1];
+				}
+			
+				ret["execution"] = '';
+			
+				if (res.data.indexOf("execution") != -1) {
+					ret["execution"] = res.data.match(
+						/" name="execution" value="(.*?)" \/>/)[1];
+				}
+			
+				return Promise.resolve(ret);
+			}
+		})
 	}
-
 }
 
-module.exports = {
-	DoLogin: LOGIN
-};
+AutoLogin.SSO = async (account, session)=>{
+	try{
+		const check = await SSO.checkLogin(session.SSO_SESSION, session.SSO_TGC);
+		session.SSO_SESSION = check.session
+		// 取得验证码
+		const captcha = await SSO.getCaptcha(session.SSO_SESSION);
+		
+		let cookie = "";
+		if ("undefined" != typeof captcha.header["set-cookie"]) cookie = captcha.header["set-cookie"];
+		else if ("undefined" != typeof captcha.header["Set-Cookie"]) cookie = captcha.header["Set-Cookie"];
+		
+		if (-1 != cookie.indexOf("SESSION")) {
+			session.SSO_SESSION = cookie.match(/SESSION=(.*);/)[1];
+		}
+		
+		const captchaDecode = await CaptchaDecode(captcha.data);
+		let code = captchaDecode?.data?.data?.result ?? '';
+		
+		const loginCookie = await SSO.doLogin({
+			SSO_SESSION: session.SSO_SESSION,
+			userId: account.userId,
+			userPass: account.userPass,
+			captcha: code,
+			execution: check.execution
+		})
+		let tgc = loginCookie.match(/TGC=(.*?);/);
+		session.SSO_TGC = tgc[1]
+		uni.setStorage({
+			key: "SSO_TGC",
+			data: tgc[1]
+		});
+	}catch(err){
+		if(err.code === 0)return;
+		log.error('sso err -> ', err)
+		
+		if (err.code === 12405 || err.code === 500) {
+			loginFailed++;
+		
+			// 重试登录，最多3次
+			if (loginFailed <= 3) {
+				log.info("第" + loginFailed + "次重试");
+				AutoLogin.SSO(account, session);
+			}
+		} else if (12401 === err.code) {
+			uni.showToast({
+				icon: "none",
+				title: err.msg
+			});
+			account.isAutoLogin = false
+			uni.setStorage({
+				key: 'accountInfo',
+				data: account
+			})
+		}
+		throw err
+	}
+}
+
+const FullAutoLogin = async(account, session)=>{
+	try{
+		// SSO
+		await AutoLogin.SSO(account, session)
+		// WEBVPN
+		await AutoLogin.WEBVPN(account, session)
+		// 教务管理
+		await AutoLogin.JWGL(account, session)
+	}catch(err){
+		log.error('FullAutoLogin err -> ',err)
+	}
+	// 计算中心？
+	await AutoLogin.Compute(account, session)
+	return Promise.resolve()
+}
+
+export default FullAutoLogin

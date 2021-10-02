@@ -1,20 +1,26 @@
 <script>
 	//app.js
-	const config = require("./config.js");
-	const login = require("./utils/login/login.js");
-	const log = require("./utils/log.js");
+	import FullAutoLogin from "./utils/login/login.js"
 	import {
 		getUserInfo
 	} from './api';
+	const {API_DOMAIN} = require("./config.js");
+	const log = require("./utils/log.js");
 
 	export default {
 		onLaunch: function(e) {
 			console.log("APP onLaunch", e); // 初始化数据
 
-			this.initData(); // =========版本升级检测===============
-
+			this.initData();
+			
+			// =========版本升级检测===============
 			this.checkUpdate();
 			
+			if (this.globalData.accountInfo.isAutoLogin) {
+				FullAutoLogin(this.globalData.accountInfo, this.globalData.sessionInfo)
+			} else {
+				console.log("未启用自动登录");
+			}
 		},
 		// 小程序发生脚本错误或 API 调用报错时触发。
 		onError: function(e) {
@@ -22,12 +28,11 @@
 			log.info("onError" + JSON.stringify(e));
 		},
 		globalData: {
-			API_DOMAIN: config.API_DOMAIN,
+			API_DOMAIN,
 			start: null,
 			classtable: null,
 			checkInList: null,
 			location: null,
-			openid: "",
 			accountInfo: {
 				userId: "",
 				userPass: "",
@@ -40,7 +45,8 @@
 				JWGL_cookie: "",
 				SSO_TGC: "",
 				JSZX_cookie: "",
-				theolCookie: ""
+				theolCookie: "",
+				TWFID: ''
 			},
 			config: {
 				github: "",
@@ -52,7 +58,6 @@
 			// #ifdef MP-QQ
 			isADClose: false,
 			// #endif
-			autoLoginProcess: null
 		},
 		methods: {
 			// 初始化数据
@@ -75,58 +80,15 @@
 					}
 				});
 
-				if (this.globalData.accountInfo.isAutoLogin) {
-					this.globalData.isUser = uni.getStorageSync("isUser");
-					this.globalData.sessionInfo.JSZX_cookie = uni.getStorageSync("JSZX_cookie");
-					this.globalData.sessionInfo.JWGL_cookie = uni.getStorageSync("JWGL_cookie");
-					this.globalData.sessionInfo.theolCookie = uni.getStorageSync("theolCookie");
-					this.globalData.sessionInfo.SSO_SESSION = uni.getStorageSync("SSO_SESSION");
-					this.globalData.sessionInfo.SSO_TGC = uni.getStorageSync("SSO_TGC");
-					this.globalData.sessionInfo.TWFID = uni.getStorageSync("TWFID");
-				} else {
-					uni.getStorage({
-						key: "isUser",
-						success: res => {
-							this.globalData.isUser = res.data;
-						}
-					});
-					uni.getStorage({
-						key: "JSZX_cookie",
-						success: res => {
-							this.globalData.sessionInfo.JSZX_cookie = res.data;
-						}
-					});
-					uni.getStorage({
-						key: "JWGL_cookie",
-						success: res => {
-							this.globalData.sessionInfo.JWGL_cookie = res.data;
-						}
-					});
-					uni.getStorage({
-						key: "theolCookie",
-						success: res => {
-							this.globalData.sessionInfo.theolCookie = res.data;
-						}
-					});
-					uni.getStorage({
-						key: "SSO_SESSION",
-						success: res => {
-							this.globalData.sessionInfo.SSO_SESSION = res.data;
-						}
-					});
-					uni.getStorage({
-						key: "SSO_TGC",
-						success: res => {
-							this.globalData.sessionInfo.SSO_TGC = res.data;
-						}
-					});
-					uni.getStorage({
-						key: "TWFID",
-						success: res => {
-							this.globalData.sessionInfo.TWFID = res.data;
-						}
-					});
-				} // 课程表数据
+				this.globalData.isUser = uni.getStorageSync("isUser");
+				this.globalData.sessionInfo.JSZX_cookie = uni.getStorageSync("JSZX_cookie");
+				this.globalData.sessionInfo.JWGL_cookie = uni.getStorageSync("JWGL_cookie");
+				this.globalData.sessionInfo.theolCookie = uni.getStorageSync("theolCookie");
+				this.globalData.sessionInfo.SSO_SESSION = uni.getStorageSync("SSO_SESSION");
+				this.globalData.sessionInfo.SSO_TGC = uni.getStorageSync("SSO_TGC");
+				this.globalData.sessionInfo.TWFID = uni.getStorageSync("TWFID");
+				
+				// 课程表数据
 				this.globalData.start = uni.getStorageSync("start");
 				this.globalData.classtable = uni.getStorageSync("classtable");
 				this.globalData.location = uni.getStorageSync("location"); // 初始化数据end

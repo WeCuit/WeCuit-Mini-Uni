@@ -116,13 +116,13 @@ export default {
     },
     bindClearAll: function () {
       this.showConfirm("是否清空本地所有数据？").then(() => {
-        app.globalData.start = null, app.globalData.classtable = null, app.globalData.checkInList = null, app.globalData.isAutoLogin = false, app.globalData.location = null, (app.globalData.accountInfo = {
+        app.globalData.start = null, app.globalData.classtable = null, app.globalData.checkInList = null, 
+				app.globalData.location = null, (app.globalData.accountInfo = {
           isAdmin: app.globalData.accountInfo.isAdmin,
           userId: "",
           userPass: "",
           vpnPass: "",
-          isRemPass: false,
-          isAutoLogin: false
+          isRemPass: false
         }, app.globalData.sessionInfo = {
           JWGL_cookie: "",
           SSO_TGC: "",

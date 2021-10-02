@@ -159,7 +159,6 @@ export default {
     getList(type, currentPage) {
       let currentCur = this.categoryCur;
       let pageData = this.getCurrentData(currentCur);
-      console.log("pageData", pageData);
       if (type !== "refresh" && pageData.end) return;
       pageData.requesting = true;
       this.setCurrentData(currentCur, pageData);

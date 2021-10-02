@@ -126,10 +126,7 @@ export default {
       uni.showLoading({
         title: "获取打卡列表~"
       });
-      app.globalData.autoLoginProcess
-        .then(() => {
-          return this.getCheckInList();
-        })
+			this.getCheckInList()
         .then(res => {
           const { data } = res.data;
           this.setData({

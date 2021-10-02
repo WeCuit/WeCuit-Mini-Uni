@@ -110,9 +110,7 @@
  		 */
  		onShow: function() {
  			this.sessionInfo = app.globalData.sessionInfo;
- 			app.globalData.autoLoginProcess.then(() => {
- 				this.loadCheckInData();
- 			});
+			this.loadCheckInData();
  		},
 
  		/**
