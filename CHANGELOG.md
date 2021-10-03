@@ -1,3 +1,9 @@
+## v2.0.5 (2021-10-03)
+
+### Refactor
+- **Auth**: 使用code授权替换openid
+- **SSO**: 重构SSO登录逻辑
+
 ## v2.0.4 (2021-10-02)
 
 ### Refactor

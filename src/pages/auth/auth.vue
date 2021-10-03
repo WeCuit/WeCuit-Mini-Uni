@@ -105,28 +105,34 @@
 					title:'提交中'
 				})
 				if(action === 'accept'){
-					postTokenResult(this.token, app.globalData.openid)
-					.then(res=>{
-						
-						wx.hideLoading()
-						const resp = res.data;
-						const {data} = resp;
-						if(data.result){
-							this.status = 'success'
-						}else{
-							this.status = 'failed'
-							this.reason = '未知原因'
-						}
-					}).catch(err=>{
-						wx.hideLoading()
-						const resp = err.data;
-						this.status = 'falied'
-						if(resp.msg){
-							this.reason = resp.msg
-						}else{
-							this.reason = '未知原因'
-						}
-					})
+					uni.login({
+						success: res => {
+							postTokenResult(this.token, res.code)
+							.then(res=>{
+								
+								wx.hideLoading()
+								const resp = res.data;
+								const {data} = resp;
+								if(data.result){
+									this.status = 'success'
+								}else{
+									this.status = 'failed'
+									this.reason = '未知原因'
+								}
+							}).catch(err=>{
+								wx.hideLoading()
+								const resp = err.data;
+								this.status = 'falied'
+								if(resp.msg){
+									this.reason = resp.msg
+								}else{
+									this.reason = '未知原因'
+								}
+							})
+						},
+						fail: () => {},
+						complete: () => {}
+					});
 				}else{
 					postTokenResult(this.token)
 					.then(res=>{

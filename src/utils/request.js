@@ -42,8 +42,6 @@ function httpBase(method, url, data, config = {}) {
       timeout: 4000,
       responseType: config.responseType || 'text',
       success: function (res) {
-        console.log("request result --> ", res);
-
         if (config.loading) {
           uni.hideLoading();
         } else {

@@ -1,13 +1,14 @@
 const {
 	RSAEncrypt
 } = require("../rsa/index.js");
-const config = require("../../config.js");
 const log = require("../log.js");
 const XMLParser = require('@xmldom/xmldom')
 const request = require("../request.js");
 const RSA = require('../rsa/wx_rsa.js')
 const xmlParser = new XMLParser.DOMParser();
 let loginFailed = 0;
+
+const AutoLogin = {}
 
 // 计算中心
 const Compute = {
@@ -24,8 +25,7 @@ const Compute = {
 	})
 }
 
-const AutoLogin = {
-	Compute:async (account, session)=>{
+AutoLogin.Compute = async (account, session)=>{
 		try{
 			const check = await Compute.checkLogin(session.JSZX_cookie);
 			const login = await Compute.doLogin(account.userId, account.userPass)
@@ -42,7 +42,6 @@ const AutoLogin = {
 			log.error('JSZX err -> ', err)
 		}
 	}
-}
 
 // 教务管理
 const JWGL = {
@@ -72,7 +71,7 @@ AutoLogin.JWGL = async (account, session)=>{
 	}
 }
 
-// WEBVPN  -  TODO
+// WEBVPN
 const WEBVPN = {
 	auth(isNeedCaptcha, TWFID) {
 		return request.get('https://webvpn.cuit.edu.cn/por/login_auth.csp', {apiversion:1},
@@ -106,6 +105,9 @@ const WEBVPN = {
 		})
 	},
 	doLogin(userId, userPass, auth) {
+		let encrypt = new RSA.RSAKey();
+		encrypt.setPublic(auth.RSA_ENCRYPT_KEY, auth.RSA_ENCRYPT_EXP.toString(16));
+		userPass = encrypt.encrypt(userPass);
 		return request.post('https://webvpn.cuit.edu.cn/por/login_psw.csp?anti_replay=1&encrypt=1&apiversion=1',
 			{
 				mitm_result: "",
@@ -131,21 +133,25 @@ const WEBVPN = {
 				"Set-Cookie"];
 			
 			if (msg == "radius auth succ") {
-				ret["status"] = 200;
+				ret["code"] = 200;
 				let TWFID = doc.getElementsByTagName("TwfID")[0].firstChild.data;
 				return Promise.resolve(TWFID);
 			} else {
 				ret["doc"] = doc;
 				let code = doc.getElementsByTagName("ErrorCode")[0].firstChild.data;
-				
+				ret.code = code
 				if (code == 20021) {
-					console.log("已是登录状态");
+					return Promise.reject(0)
 				} else if (code == 20004) {
-					console.log("账号信息错误");
+					ret.msg = '账号信息错误'
 				} else if (code == 20041) {
-					console.log("错误次数过多");
+					ret.msg = '错误次数过多'
 				} else if (code == 20023) {
-					console.log("验证码错误");
+					ret.msg = '验证码错误'
+				} else if (code == 20026) {
+					ret.msg = '密码格式不正确'
+				}else{
+					ret.msg = doc.getElementsByTagName("Message")[0].firstChild.data;
 				}
 				
 				if (-1 != cookie.indexOf("ENABLE_RANDCODE=1")) ret["needCaptcha"] = true;
@@ -179,10 +185,7 @@ AutoLogin.WEBVPN = async (account, session)=>{
 		const check = await WEBVPN.checkLogin(0, session.TWFID);
 		const auth = await WEBVPN.auth(0, session.TWFID);
 		session.TWFID = auth.TwfID
-		let encrypt = new RSA.RSAKey();
-		encrypt.setPublic(auth.RSA_ENCRYPT_KEY, auth.RSA_ENCRYPT_EXP.toString(16));
-		let userPass = encrypt.encrypt(account.vpnPass || (account.userPass + "_" + auth.rc));
-		const twfid = await WEBVPN.doLogin(account.userId, userPass, auth)
+		const twfid = await WEBVPN.doLogin(account.userId, account.vpnPass || (account.userPass + "_" + auth.rc), auth)
 		session.TWFID = twfid
 		uni.setStorage({
 			key: "TWFID",
@@ -199,9 +202,9 @@ AutoLogin.WEBVPN = async (account, session)=>{
  * ORC识别验证码
  *
  * @param pic arraybuffer
- *
+ * @return {object} res
  */
-const CaptchaDecode = (pic) => {
+export const CaptchaDecode = (pic) => {
 	try {
 		const byteArray = new Uint8Array(pic);
 		const hexParts = [];
@@ -235,6 +238,11 @@ const CaptchaDecode = (pic) => {
 
 // 统一登录中心
 const SSO = {
+	/**
+	 * @param {Object} data
+	 * @return resolve {string} cookie
+	 * 
+	 */
 	doLogin(data) {
 		if (0 == data.userId.length || 0 == data.userPass.length) {
 			return Promise.reject({
@@ -257,7 +265,7 @@ const SSO = {
 				"Content-Type": "application/x-www-form-urlencoded"
 			}
 		}).then(res => {
-			if (!res.data) resolve({code: -1, msg: '响应体为空'});
+			if (!res.data) return Promise.reject({code: -1, msg: '响应体为空'});
 			const html = res.data;
 
 			if ("string" !== typeof html) {
@@ -266,44 +274,42 @@ const SSO = {
 					msg: "预期之外的异常"
 				});
 			}
-
+			let execution, ret = {};
+			if (html.indexOf("execution") != -1) {
+				ret["execution"] = html.match(/" name="execution" value="(.*?)" \/>/)[1];
+			}
 			if (html.indexOf("已经成功登统一认证中心") != -1) {
 				// 处理cookie
-				var cookie = "";
+				let cookie = "";
 				if ("undefined" != typeof res.header["set-cookie"])
 					cookie = res.header["set-cookie"];
 				else if ("undefined" != typeof res.header["Set-Cookie"])
 				 cookie = res.header["Set-Cookie"];
 				return Promise.resolve(cookie);
 			} else if (html.indexOf("用户名或密码错误") != -1) {
-				return Promise.reject({
-					code: 12401,
-					msg: "用户名或密码错误"
-				});
+				ret.code = 12401
+				ret.msg = '用户名或密码错误'
+				return Promise.reject(ret);
 			} else if (html.indexOf("必须录入") != -1) {
-				return Promise.reject({
-					code: 12401,
-					msg: "数据缺失"
-				});
+				ret.code = 12401
+				ret.msg = '数据缺失'
+				return Promise.reject(ret);
 			} else if (html.indexOf("账号被锁定") != -1) {
-				var unlockTime = html.match(/账号被锁定，请在(.*?)后重新登录/)[1];
-				return Promise.reject({
-					code: 12403,
-					msg: "账号被锁定至" + unlockTime
-				});
+				let unlockTime = html.match(/账号被锁定，请在(.*?)后重新登录/)[1];
+				ret.code = 12403
+				ret.msg = `账号被锁定至${unlockTime}`
+				return Promise.reject(ret);
 			} else if (html.indexOf("禁用") != -1) {
-				return Promise.reject({
-					code: 12403,
-					msg: "账号被禁用！"
-				});
+				ret.code = 12403
+				ret.msg = `账号被禁用！`
+				return Promise.reject(ret);
 			} else if (html.indexOf("必须录入验证码") != -1 || -1 != html.indexOf("验证码无效")) {
-				return Promise.resolve({
-					code: 12405,
-					msg: "验证码有误"
-				});
+				ret.code = 12405
+				ret.msg = `验证码有误`
+				return Promise.reject(ret);
 			} else {
 				return Promise.reject({
-					code: 0,
+					code: -2,
 					msg: '未知异常'
 				});
 			}
@@ -311,7 +317,6 @@ const SSO = {
 
 	},
 	getCaptcha(SESSION) {
-		console.log("SSO GET CAPTCHA.");
 		return request.get('https://sso.cuit.edu.cn/authserver/captcha', null, {
 			responseType: 'arraybuffer',
 			header: {
@@ -322,7 +327,7 @@ const SSO = {
 	/**
 	 * @param {Object} sso_session
 	 * @param {Object} tgc
-	 * reject 0 已登录
+	 * reject {code:0} 已登录
 	 */
 	checkLogin(sso_session, tgc) {
 		return request.get('https://sso.cuit.edu.cn/authserver/login', null, {
@@ -398,13 +403,14 @@ AutoLogin.SSO = async (account, session)=>{
 		if(err.code === 0)return;
 		log.error('sso err -> ', err)
 		
-		if (err.code === 12405 || err.code === 500) {
+		if (err.code === 12405 || err.data.code === 500) {
 			loginFailed++;
 		
 			// 重试登录，最多3次
 			if (loginFailed <= 3) {
 				log.info("第" + loginFailed + "次重试");
 				AutoLogin.SSO(account, session);
+				return Promise.reject(`第${loginFailed}次重试`);
 			}
 		} else if (12401 === err.code) {
 			uni.showToast({
@@ -437,4 +443,10 @@ const FullAutoLogin = async(account, session)=>{
 	return Promise.resolve()
 }
 
+export const LoginObj = {
+	Compute,
+	JWGL,
+	WEBVPN,
+	SSO
+}
 export default FullAutoLogin

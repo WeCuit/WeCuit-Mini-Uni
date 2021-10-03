@@ -16,7 +16,7 @@
 			// =========版本升级检测===============
 			this.checkUpdate();
 			
-			if (this.globalData.accountInfo.isAutoLogin) {
+			if (this.globalData.accountInfo.isAutoLogin && e.path === 'pages/index/index') {
 				FullAutoLogin(this.globalData.accountInfo, this.globalData.sessionInfo)
 			} else {
 				console.log("未启用自动登录");
