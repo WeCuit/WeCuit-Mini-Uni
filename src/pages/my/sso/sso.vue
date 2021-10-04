@@ -66,29 +66,15 @@
 
 <script>
 	// pages/my/sso/sso.js
-	const XMLParser = require('@xmldom/xmldom')
-	const xmlParser = new XMLParser.DOMParser();
 	const log = require('../../../utils/log.js')
 	import {LoginObj, CaptchaDecode} from '../../../utils/login/login.js'
 	import {
-		jwglLogin,
-		ssoLogout,
-		WV_login,
-		WV_loginAuth,
-		WV_loginCheck
+		ssoLogout
 	} from '../api'; 
 	
-	// var L = new login.DoLogin();
-	// rsa 加密
-	const RSA = require("../../../utils/rsa/wx_rsa.js");
-	const encrypt = new RSA.RSAKey();
 	const app = getApp();
-	let _this;
 	import mpCells from "../../../miniprogram_npm/weui-miniprogram/cells/cells";
 	import mpCell from "../../../miniprogram_npm/weui-miniprogram/cell/cell";
-	import {
-		RSAEncrypt
-	} from '../../../utils/rsa/index.js'
 
 	export default {
 		data() {
@@ -122,7 +108,6 @@
 		 * 生命周期函数--监听页面加载
 		 */
 		onLoad: function(options) {
-			_this = this;
 			this.initUserData();
 		},
 

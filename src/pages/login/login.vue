@@ -38,20 +38,22 @@
 			},
 			getAccessToken: function(){
 				this.getCode().then(res=>{
-					log.info(res)
 					if(res.code){
 						return getAccessToken(res.code)
 					}else{
 						return Promise.reject(res)
 					}
 				}).then(res=>{
-					log.info(res)
 					const {data} = res.data
 					app.globalData.userInfo.uid = data.userInfo.uid
-					app.globalData.userInfo.stuId = data.userInfo.stuId
+					app.globalData.userInfo.sid = data.userInfo.sid
 					app.globalData.userInfo.bind = data.bind
-					app.globalData.auth[0] = data.auth[0]
-					app.globalData.auth[1] = data.auth[1]
+					app.globalData.token = data.token
+					data.token.expires_in = parseInt(new Date().getTime()/1000) + data.token.expires_in - 5
+					uni.setStorage({
+						key: 'token',
+						data: data.token
+					})
 					this.goToHome()
 				}).catch(err=>{
 					log.error(err)
@@ -61,12 +63,14 @@
 						this.classstr = 'icon-shibai'
 						this.text = '未注册'
 					}
-					setTimeout(this.goToHome, 100);
+					this.goToHome()
 				})
 			},
 			goToHome: function(){
-				uni.switchTab({
-					url: '/pages/index/index'
+				uni.reLaunch({
+					url: '/pages/index/index',
+					success: console.log,
+					fail: console.log
 				})
 			}
 		}

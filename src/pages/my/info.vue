@@ -21,14 +21,10 @@
 				</view>
 			</uni-col>
 			<uni-col>
-				<view class="num-area" @click="developing">
-					<view>学号: {{num||'未绑定'}}</view>
-					<view>立即绑定 ></view>
-				</view>
-				<!-- <navigator url="/pages/my/bind/bind" class="num-area" >
-					<view>学号: {{num||'未绑定'}}</view>
-					<view>立即绑定 ></view>
-				</navigator> -->
+				<navigator url="/pages/my/bind/bind" class="num-area" >
+					<view>学号: {{sid||'未绑定'}}</view>
+					<view>{{sid?'更新绑定':'立即绑定'}} ></view>
+				</navigator>
 			</uni-col>
 		</uni-row>
 	</div>
@@ -36,28 +32,39 @@
 
 <script>
 	const app = getApp();
-	
+	const log = require('../../utils/log.js')
 	export default {
+		props: {
+			userid: {
+				type: Number,
+				default: -1
+			},
+			stuid: {
+				type: String,
+				default: null
+			},
+		},
 		data(){
 			return {
-				uid: -1
+				uid: this.userid,
+				sid: this.stuid
+			}
+		},
+		watch: {
+			stuid(newValue, oldValue) {
+				this.sid = newValue
+			},
+			userid(newValue, oldValue) {
+				this.uid = newValue
 			}
 		},
 		onReady(){
-			this.uid = app.globalData.userInfo.uid
-			this.num = app.globalData.userInfo.sid
 			uni.setNavigationBarColor({
 				frontColor: '#ffffff',
 				backgroundColor: '#7a9fcc'
 			})
 		},
 		methods:{
-			developing: function(){
-				uni.showToast({
-					title: '开发中...',
-					icon: 'none'
-				});
-			},
 		}
 	}
 </script>

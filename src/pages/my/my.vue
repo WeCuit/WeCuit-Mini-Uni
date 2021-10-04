@@ -1,7 +1,7 @@
 <template>
 	<view class="index-my">
-		<Login></Login>
-		
+		<Info :userid="uid" :stuid="sid"></Info>
+
 		<uni-card title="账号相关">
 			<label v-if="!register" class="label">
 				<view class="loginBtn" @click="developing">
@@ -112,37 +112,45 @@
 
 <script>
 	const app = getApp();
-
-	import Login from './login.vue';
-
+	import Info from './info.vue'
+	
 	export default {
 		data() {
 			return {
-				register: false
+				register: false,
+				uid: -1,
+				sid: null
 			};
 		},
 
 		components: {
-			Login: Login
+			Info
 		},
-		props: {},
 
 		/**
 		 * 生命周期函数--监听页面加载
 		 */
 		onLoad: function(options) {
 			this.register = app.globalData.userInfo.uid > 0
+			this.uid = app.globalData.userInfo.uid
+			this.sid = app.globalData.userInfo.sid
 		},
-
+		
 		/**
 		 * 生命周期函数--监听页面初次渲染完成
 		 */
-		onReady: function() {},
+		onReady: function() {
+			uni.setNavigationBarColor({
+				frontColor: '#ffffff',
+				backgroundColor: '#7a9fcc'
+			})
+		},
 
 		/**
 		 * 生命周期函数--监听页面显示
 		 */
 		onShow: function() {
+			this.sid = app.globalData.userInfo.sid
 		},
 
 		/**
@@ -230,7 +238,7 @@
 		background-color: #F1F1F1;
 		/* height: 100vh; */
 	}
-	
+		
 	.loginBtn{
 		width: 100vw;
 		font-size: 30rpx;

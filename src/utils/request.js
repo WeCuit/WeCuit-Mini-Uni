@@ -15,7 +15,7 @@ let auth = null;
  */
 function httpBase(method, url, data, config = {}) {
 	if(auth === null)
-		auth = getApp().globalData.auth
+		auth = getApp().globalData?.token?.auth ?? null
   const requestUrl = (url.indexOf("http") === 0 ? '' : baseUrl) + url;
   const header = {
     'Content-Type': 'application/json'
