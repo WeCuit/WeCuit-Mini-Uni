@@ -33,6 +33,11 @@
 			classtable: null,
 			checkInList: null,
 			location: null,
+			userInfo: {
+				uid: -1,
+				bind: false,
+			},
+			auth: [],
 			accountInfo: {
 				userId: "",
 				userPass: "",

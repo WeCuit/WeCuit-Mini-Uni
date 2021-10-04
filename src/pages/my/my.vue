@@ -1,9 +1,48 @@
 <template>
 	<view class="index-my">
-		<!-- <Login></Login> -->
+		<Login></Login>
 		
-		<uni-card title="登录账号">
-			<navigator class="loginBtn" url="/pages/my/sso/sso" open-type="navigate">统一登录中心</navigator>
+		<uni-card title="账号相关">
+			<label v-if="!register" class="label">
+				<view class="loginBtn" @click="developing">
+					<view>
+						注册账户
+					</view>
+					<view class="subicon-r iconfont icon-arr-right"></view>
+				</view>
+				<!-- <navigator class="loginBtn" url="/pages/my/register/register" open-type="navigate">
+					<view>
+						注册账户
+					</view>
+					<view class="subicon-r iconfont icon-arr-right"></view>
+				</navigator> -->
+			</label>
+			<label class="label">
+				<navigator class="loginBtn" url="/pages/my/sso/sso" open-type="navigate">统一登录中心</navigator>
+				<view class="subicon-r iconfont icon-arr-right"></view>
+			</label>
+			<label class="label last-label">
+				<view class="loginBtn" @click="developing">
+						<!-- #ifdef MP-WEIXIN -->
+						绑定QQ
+						<!-- #endif -->
+						<!-- #ifdef MP-QQ -->
+						绑定微信
+						<!-- #endif -->
+				</view>
+				<!-- <navigator class="loginBtn" url="/pages/my/bind/bind" open-type="navigate">
+					<view>
+						<!-- #ifdef MP-WEIXIN -->
+						绑定QQ
+						<!-- #endif -->
+						<!-- #ifdef MP-QQ -->
+						绑定微信
+						<!-- #endif -->
+					</view>
+					<view class="subicon-r iconfont icon-arr-right"></view>
+				</navigator> -->
+			</label>
+			
 		</uni-card>
 
 		<uni-card title="其它功能">
@@ -54,20 +93,20 @@
 				<view class="subicon-r iconfont icon-arr-right"></view>
 			</navigator>
 			<!-- #endif -->
-			<label @tap="bindThanks" class="label">
+			<label @tap="bindThanks" class="label last-label">
 				<view class="subicon iconfont icon-guanyu" style="color:orange"></view>
 				<view @tap="bindThanks">关于</view>
 				<view class="subicon-r iconfont icon-arr-right"></view>
 			</label>
-			<label style="color:red" @tap="bindLogout" class="label last-label">
+			<!-- <label style="color:red" @tap="bindLogout" class="label">
 				<view class="subicon iconfont icon-tuichu"></view>
 				<view>退出登录</view>
 				<view class="subicon-r iconfont icon-arr-right"></view>
-			</label>
+			</label> -->
 		</uni-card>
 
 		<!-- TabBar 占位 -->
-		<view style="height: 10vh;"></view>
+		<view style="height: 10vh;background-color: #F1F1F1;"></view>
 	</view>
 </template>
 
@@ -79,7 +118,7 @@
 	export default {
 		data() {
 			return {
-				selected: 0
+				register: false
 			};
 		},
 
@@ -91,7 +130,9 @@
 		/**
 		 * 生命周期函数--监听页面加载
 		 */
-		onLoad: function(options) {},
+		onLoad: function(options) {
+			this.register = app.globalData.userInfo.uid > 0
+		},
 
 		/**
 		 * 生命周期函数--监听页面初次渲染完成
@@ -129,6 +170,12 @@
 		 */
 		onShareAppMessage: function() {},
 		methods: {
+			developing: function(){
+				uni.showToast({
+					title: '开发中...',
+					icon: 'none'
+				});
+			},
 			// 点击事件
 			bindGroup: function() {
 				uni.showModal({
@@ -180,21 +227,24 @@
 </script>
 <style>
 	.index-my {
-		padding-top: 1rem;
 		background-color: #F1F1F1;
-		height: 100vh;
+		/* height: 100vh; */
 	}
 	
 	.loginBtn{
+		width: 100vw;
 		font-size: 30rpx;
 		color: gray !important;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 	}
 
 	/* 下部分 */
 	.label {
 		color: gray;
 		border-bottom: 1rpx solid #d9d9d9;
-		height: 9vh;
+		height: 80rpx;
 		font-size: 30rpx;
 		align-items: center;
 		display: flex;

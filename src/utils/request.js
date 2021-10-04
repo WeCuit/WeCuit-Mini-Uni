@@ -1,5 +1,6 @@
 import { API_DOMAIN } from '../config';
 const baseUrl = API_DOMAIN;
+let auth = null;
 
 /**
  * http请求封装
@@ -13,10 +14,15 @@ const baseUrl = API_DOMAIN;
  * @param config.loadingMsg 请求提示信息
  */
 function httpBase(method, url, data, config = {}) {
+	if(auth === null)
+		auth = getApp().globalData.auth
   const requestUrl = (url.indexOf("http") === 0 ? '' : baseUrl) + url;
   const header = {
     'Content-Type': 'application/json'
   };
+	if(auth?.length ?? 0 === 2){
+		header[auth[0]] = auth[1]
+	}
 
   if (config.header) {
     for (let h in config.header) {
@@ -90,7 +96,7 @@ function httpBase(method, url, data, config = {}) {
                 }
               }
             });
-          } else {
+          } else if(config?.notice??true){
             uni.showToast({
               title: resp.msg ? resp.msg : '未知错误',
               icon: "none"
