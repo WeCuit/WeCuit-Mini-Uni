@@ -5,7 +5,7 @@
 				<uni-col offset="5" span="14">
 					<uni-title type="h1" align="center" title="登录授权"></uni-title>
 				</uni-col>
-				
+
 				<uni-col v-if="status === 'wait'">
 					<view class="notice">
 						<view class="iconfont icon-dengdaishouquan icon" style="color:#158eff"></view>
@@ -14,11 +14,13 @@
 					</view>
 					<view class="btn-area">
 						<uni-row>
-							<uni-col span="16" offset="4"><button type="primary" @click="doAuthAction('accept')">授权</button></uni-col>
+							<uni-col span="16" offset="4"><button type="primary"
+									@click="doAuthAction('accept')">授权</button></uni-col>
 						</uni-row>
 						<uni-row>
 							<uni-col span="16" offset="4">
-								<button style="margin-top: 20rpx;" type="default" @click="doAuthAction('reject')">拒绝</button>
+								<button style="margin-top: 20rpx;" type="default"
+									@click="doAuthAction('reject')">拒绝</button>
 							</uni-col>
 						</uni-row>
 					</view>
@@ -40,19 +42,19 @@
 					</view>
 				</uni-col>
 				<uni-col v-else-if="status === 'failed'">
-						<view class="notice">
-							<view class="iconfont icon-shouquanbohui icon" style="color:red"></view>
-							<view>授权失败：{{reason}}</view>
-						</view>
-						<view class="btn-area">
-							<uni-row>
-								<uni-col span="16" offset="4">
-									<navigator open-type="switchTab" url="/pages/index/index">
-										<button style="margin-top: 20rpx;" type="default">回首页</button>
-									</navigator>
-								</uni-col>
-							</uni-row>
-						</view>
+					<view class="notice">
+						<view class="iconfont icon-shouquanbohui icon" style="color:red"></view>
+						<view>授权失败：{{reason}}</view>
+					</view>
+					<view class="btn-area">
+						<uni-row>
+							<uni-col span="16" offset="4">
+								<navigator open-type="switchTab" url="/pages/index/index">
+									<button style="margin-top: 20rpx;" type="default">回首页</button>
+								</navigator>
+							</uni-col>
+						</uni-row>
+					</view>
 				</uni-col>
 			</uni-row>
 		</view>
@@ -60,17 +62,22 @@
 </template>
 
 <script>
-	import {getTokenTnfo, postTokenResult} from './api.js'
+	import {
+		getTokenTnfo,
+		postTokenResult,
+		postBindMini2Mini
+	} from './api.js'
 	const app = getApp()
-	
+
 	export default {
-		data(){
+		data() {
 			return {
 				token: '',
 				authType: '',
 				displayName: '未知用户',
 				status: 'wait',
-				reason: '未知原因'
+				reason: '未知原因',
+				target: ''
 			}
 		},
 		onLoad(query) {
@@ -80,79 +87,96 @@
 			this.token = scene
 			this.loadTokenInfo(this.token)
 		},
-		methods:{
-			loadTokenInfo(token){
-				getTokenTnfo(token).then(res=>{
+		methods: {
+			loadTokenInfo(token) {
+				getTokenTnfo(token).then(res => {
 					const resp = res.data;
-					const {data} = resp;
-					console.log(data)
+					const {
+						data
+					} = resp;
 					this.authType = data.type;
-					if(data.type === 'bind')
+					if (data.type === 'bind')
 						this.displayName = data.displayName
-				}).catch(err=>{
+					this.target = data.target
+				}).catch(err => {
 					console.log('getAuthInfo err', err)
 					const resp = err.data;
 					const data = resp.data;
-					if(resp.code === 405){
+					if (resp.code === 405) {
 						// token无效
 						this.status = 'failed'
 						this.reason = 'token无效'
 					}
 				})
 			},
-			doAuthAction(action){
+			doAuthAction(action) {
 				uni.showLoading({
-					title:'提交中'
+					title: '提交中'
 				})
-				if(action === 'accept'){
+				if (action === 'accept') {
 					uni.login({
 						success: res => {
-							postTokenResult(this.token, res.code)
-							.then(res=>{
-								
+							this.postResult(res.code).then(res => {
 								wx.hideLoading()
 								const resp = res.data;
-								const {data} = resp;
-								if(data.result){
+								const {
+									data
+								} = resp;
+								if (data.result) {
 									this.status = 'success'
-								}else{
+								} else {
 									this.status = 'failed'
 									this.reason = '未知原因'
 								}
-							}).catch(err=>{
+							}).catch(err => {
 								wx.hideLoading()
 								const resp = err.data;
-								this.status = 'falied'
-								if(resp.msg){
+								this.status = 'failed'
+								if (resp.msg) {
 									this.reason = resp.msg
-								}else{
+								} else {
 									this.reason = '未知原因'
 								}
 							})
+
 						},
 						fail: () => {},
 						complete: () => {}
 					});
-				}else{
+				} else {
 					postTokenResult(this.token)
-					.then(res=>{
-						wx.hideLoading()
-						const resp = res.data;
-						const {data} = resp;
-						this.status = 'failed'
-						if(data.result){
-							this.reason = '主动拒绝'
-						}
-					}).catch(err=>{
-						const resp = err.data;
-						this.status = 'failed'
-						wx.hideLoading()
-						if(resp.msg){
-							this.reason = resp.msg
-						}else{
-							this.reason = '未知原因'
-						}
-					})
+						.then(res => {
+							wx.hideLoading()
+							const resp = res.data;
+							const {
+								data
+							} = resp;
+							this.status = 'failed'
+							if (data.result) {
+								this.reason = '主动拒绝'
+							}
+						}).catch(err => {
+							const resp = err.data;
+							this.status = 'failed'
+							wx.hideLoading()
+							if (resp.msg) {
+								this.reason = resp.msg
+							} else {
+								this.reason = '未知原因'
+							}
+						})
+				}
+			},
+			postResult(code) {
+				switch (this.target) {
+					case 'admin':
+						return postTokenResult(this.token, code)
+						break;
+					case 'mini':
+						return postBindMini2Mini(this.token, code)
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -160,16 +184,18 @@
 </script>
 
 <style scoped>
-	.btn-area{
+	.btn-area {
 		margin-top: 20rpx;
 	}
-	.notice{
+
+	.notice {
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		flex-direction: column;
 	}
-	.icon{
+
+	.icon {
 		font-size: 333rpx;
 		margin: 20rpx;
 	}

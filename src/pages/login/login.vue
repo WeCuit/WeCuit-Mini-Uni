@@ -21,8 +21,12 @@
 			return {
 				classstr: 'icon-jiazai loading',
 				text: '登录中...',
-				fail: false
+				fail: false,
+				target: '/pages/index/index'
 			}
+		},
+		onLoad(options){
+			this.target = options?.target ?? this.target
 		},
 		onReady(){
 			this.getAccessToken()
@@ -68,9 +72,15 @@
 			},
 			goToHome: function(){
 				uni.reLaunch({
-					url: '/pages/index/index',
+					url: this.target,
 					success: console.log,
-					fail: console.log
+					fail: ()=>{
+						uni.reLaunch({
+							url: '/pages/index/index',
+							success: console.log,
+							fail: console.error
+						})
+					}
 				})
 			}
 		}

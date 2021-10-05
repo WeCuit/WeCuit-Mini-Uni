@@ -28,10 +28,14 @@
 					else return Promise.reject(res)
 				}).then(res=>{
 					const {data} = res.data
-					const {auth, userInfo} = data;
+					const {token, userInfo} = data;
 					app.globalData.userInfo.uid = userInfo.uid;
-					app.globalData.auth[0] = auth[0]
-					app.globalData.auth[1] = auth[1]
+					app.globalData.token = token
+					uni.showToast({
+						title: '注册成功',
+						icon: 'success'
+					})
+					setTimeout(uni.navigateBack, 1000);
 				})
 				
 			}

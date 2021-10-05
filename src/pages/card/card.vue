@@ -17,7 +17,7 @@
 			</view>
 			<view class="actionList">
 				<view v-for="(item, index) in actions" :key="index">
-					<view @tap="item.action" :data-data="item.data">
+					<view @tap="actionHandle(item.action)" :data-data="item.data">
 						<view :class="'iconfont ' + item.font" style="font-size: 2rem;"></view>{{item.text}}
 					</view>
 				</view>
@@ -42,67 +42,8 @@
 				</mp-cells>
 			</view>
 
-			<!-- 二维码按钮 -->
-			<!-- <view data-type="show" bind:tap="bindShowQRCode" style="display:flex;justify-content:center;">
-        <view class="card-qrcode-btn">
-            <view class="iconfont icon-qrcode" style="font-size:xx-large;"></view>
-        </view>
-    </view> -->
 		</view>
 
-		<!-- 二维码 -->
-		<view class="QRCode" :style="'display:' + (showQRCode?'block':'none') + ';'">
-			<view class="QRContent">
-				<view class="QRItem">二维码</view>
-				<!-- <image src="{{qrCode?qrAPI + qrCode: ''}}" bind:tap="previewQRCode" bind:longpress="refreshQRCode" style="width:{{windowWidth * 0.9}}px;height:{{windowWidth * 0.9}}px"/> -->
-				<canvas type="2d" style="width:90vw;height:90vh" id="payQrcode"></canvas>
-				<view @tap="refreshQRCode" style="display: flex;">
-					<view :class="'iconfont ' + refresh[refreshStatus].font" style="color:#2347bd;"></view>
-					{{refresh[refreshStatus].text}}
-				</view>
-				<view class="QRItem">
-					<button style="padding: 0.6rem;" @tap="bindShowQRCode">
-						关闭
-					</button>
-				</view>
-			</view>
-		</view>
-
-		<!-- 支付结果 -->
-		<view
-			:style="'background: #fff;position: relative;height: 100vh;flex-direction: column;justify-content: center;display:' + (showPayRet?'flex':'none')">
-
-			<!-- 成功 -->
-			<block v-if="'1'==payRet.Recflag">
-				<view style="text-align: center;color: #2347bd;">
-					<view class="iconfont icon-success" style="font-size:4rem;"></view>
-					<view>付款成功</view>
-				</view>
-				<view style="font-size: 3rem;text-align: center;">{{payRet.MonDealCur}}</view>
-				<mp-cells>
-					<mp-cell value="订单金额" :footer="payRet.MonDeal"></mp-cell>
-					<mp-cell value="优惠" :footer="payRet.ConcessionsMon"></mp-cell>
-					<mp-cell value="管理费" :footer="payRet.ConsumeMgFee"></mp-cell>
-					<mp-cell value="商户名" :footer="payRet.DealerName"></mp-cell>
-					<mp-cell value="消费时间" :footer="payRet.DealTime"></mp-cell>
-				</mp-cells>
-			</block>
-
-			<!-- 失败 -->
-			<block v-else>
-				<view style="text-align: center;color: red;margin-bottom: 8rem;">
-					<view class="iconfont icon-shibai" style="font-size:4rem;"></view>
-					<view>交易失败</view>
-					<view>{{payError}}</view>
-				</view>
-			</block>
-
-			<view style="margin-top:1rem;">
-				<button type="primary" @tap="bindShowPayRet">
-					关闭
-				</button>
-			</view>
-		</view>
 	</view>
 </template>
 
@@ -115,12 +56,6 @@
 		getAccWallet,
 		getDealRec
 	} from './api';
-	const card = new Card.Card(app.globalData.API_DOMAIN);
-	import {
-		drawById
-	} from "../../utils/qrcode";
-	var qrCodeInfoInterval = null;
-	var _this = null;
 	import mpCell from "../../miniprogram_npm/weui-miniprogram/cell/cell";
 	import mpCells from "../../miniprogram_npm/weui-miniprogram/cells/cells";
 
@@ -146,142 +81,7 @@
 					action: "bindChargeAct",
 					data: ""
 				}],
-				DealRec: [],
-				showQRCode: false,
-				qrAPI: app.globalData.API_DOMAIN + "/UTILS/genQRCode/?str=",
-				qrCode: null,
-				showPayRet: false,
-				payRet: {},
-				refresh: [{
-					text: "点击刷新二维码",
-					font: "icon-shuaxin"
-				}, {
-					text: "正在刷新二维码",
-					font: "icon-shuaxin refresh"
-				}, {
-					text: "已刷新",
-					font: "icon-success"
-				}],
-				refreshStatus: 0,
-				screenBrightness: 0,
-				windowWidth: app.globalData.windowWidth,
-				firstSSOLogin: true,
-				QRCode: {
-					// 查询支付状态
-					getInfo: function() {
-						card.queryPayStatus(_this.QRCode).then(res => {
-							if (2000 == res.data.status) {
-								if ("1" == res.data.Recflag) {
-									uni.showToast({
-										title: "支付成功"
-									});
-								} else if ("2" == res.data.Recflag) {
-									uni.showToast({
-										icon: "none",
-										title: "交易失败"
-									});
-								} else if ("undefined" == typeof res.data.Recflag || "0" !== res.data
-									.Recflag) {
-									uni.showToast({
-										icon: "none",
-										title: "未知错误"
-									});
-									clearInterval(qrCodeInfoInterval);
-									uni.setNavigationBarColor({
-										frontColor: "#000000",
-										backgroundColor: "#fff"
-									});
-									uni.setScreenBrightness({
-										value: _this.screenBrightness
-									});
-									uni.setNavigationBarTitle({
-										title: "支付结果"
-									});
-
-									_this.setData({
-										showQRCode: !_this.showQRCode,
-										showPayRet: true,
-										payError: JSON.stringify(res.data)
-									});
-
-									return;
-								}
-
-								if ("1" == res.data.Recflag) {
-									clearInterval(qrCodeInfoInterval);
-									qrCodeInfoInterval = null;
-									res.data.MonDeal = res.data.MonDeal.toFixed(2);
-									res.data.MonDealCur = res.data.MonDealCur.toFixed(2);
-									res.data.ConcessionsMon = res.data.ConcessionsMon.toFixed(2);
-									res.data.ConsumeMgFee = res.data.ConsumeMgFee.toFixed(2);
-									uni.setNavigationBarColor({
-										frontColor: "#000000",
-										backgroundColor: "#fff"
-									});
-									uni.setScreenBrightness({
-										value: _this.screenBrightness
-									});
-									uni.setNavigationBarTitle({
-										title: "支付结果"
-									});
-
-									_this.setData({
-										showQRCode: !_this.showQRCode,
-										showPayRet: true,
-										payRet: res.data
-									});
-								}
-							} else {
-								uni.showToast({
-									icon: "none",
-									title: "未知错误"
-								});
-								clearInterval(qrCodeInfoInterval);
-								uni.setNavigationBarColor({
-									frontColor: "#000000",
-									backgroundColor: "#fff"
-								});
-								uni.setScreenBrightness({
-									value: _this.screenBrightness
-								});
-								uni.setNavigationBarTitle({
-									title: "支付结果"
-								});
-
-								_this.setData({
-									showQRCode: !_this.showQRCode,
-									showPayRet: true,
-									payError: "可以的话，请截图给开发者" + JSON.stringify(res.data)
-								});
-
-								return;
-							}
-						}).catch(err => {
-							clearInterval(qrCodeInfoInterval);
-							uni.showToast({
-								icon: "none",
-								title: "请求失败"
-							});
-							uni.setNavigationBarColor({
-								frontColor: "#000000",
-								backgroundColor: "#fff"
-							});
-							uni.setScreenBrightness({
-								value: _this.screenBrightness
-							});
-							uni.setNavigationBarTitle({
-								title: "支付结果"
-							});
-
-							_this.setData({
-								showQRCode: !_this.showQRCode,
-								showPayRet: true,
-								payError: err.errMsg
-							});
-						});
-					}
-				},
-				payError: ""
+				DealRec: []
 			};
 		},
 
@@ -295,7 +95,6 @@
 		 * 生命周期函数--监听页面加载
 		 */
 		onLoad: function(options) {
-			_this = this;
 			uni.getStorage({
 				key: "CARD_AccNum",
 				success: res => {
@@ -312,11 +111,6 @@
 							this.getDealRec(0, "", 0, 0);
 						}
 					});
-				}
-			});
-			uni.getScreenBrightness({
-				success: res => {
-					this.screenBrightness = res.value;
 				}
 			});
 		},
@@ -340,10 +134,6 @@
 		 * 生命周期函数--监听页面卸载
 		 */
 		onUnload: function() {
-			if (qrCodeInfoInterval) {
-				clearInterval(qrCodeInfoInterval);
-				qrCodeInfoInterval = null;
-			}
 		},
 
 		/**
@@ -425,9 +215,11 @@
 					});
 				});
 			},
-			
+			actionHandle: function (action) {
+				this[action]()
+			},
 			// 用户尝试点击充值按钮
-			bindChargeAct: function(e) {
+			bindChargeAct: function() {
 				// #ifdef MP-QQ
 				uni.showModal({
 					title: "需要使用“易校园”小程序",
@@ -451,116 +243,13 @@
 						} else if (res.cancel) {
 							uni.showToast({
 								icon: "none",
-								title: "阁下取消了本次操作"
+								title: "你取消了本次操作"
 							});
 						}
 					}
 				});
 				// #endif
 			},
-			// 全屏预览二维码
-			previewQRCode: function() {
-				uni.previewImage({
-					urls: [this.qrAPI + this.qrCode]
-				});
-			},
-			// 刷新二维码
-			refreshQRCode: function() {
-				clearInterval(qrCodeInfoInterval);
-				qrCodeInfoInterval = null;
-				this.setData({
-					refreshStatus: 1
-				});
-				card.getPayQRCode(_this.CARD_AccNum).then(res => {
-					_this.QRCode = res.data.QRCode;
-					drawById.call(wx, "payQrcode", {
-						text: res.data.QRCode,
-						// 二维码内容
-						width: _this.windowWidth * 0.9,
-						// 宽度 px内容自动转换像素比
-						height: _this.windowWidth * 0.9 // 高度
-
-					});
-					this.setData({
-						refreshStatus: 2
-					});
-					qrCodeInfoInterval = setInterval(this.QRCode.getInfo, 5000);
-					setTimeout(() => {
-						this.setData({
-							refreshStatus: 0
-						});
-					}, 1000);
-				}).catch(err => {
-					uni.showToast({
-						title: err.errMsg,
-						icon: "none"
-					});
-				});
-			},
-			// 切换显示二维码
-			bindShowQRCode: function(e) {
-				if (e.currentTarget.dataset.type) {
-					// 显示二维码
-					uni.setNavigationBarTitle({
-						title: "付款码"
-					});
-					uni.setNavigationBarColor({
-						frontColor: "#ffffff",
-						backgroundColor: "#ff5c15"
-					});
-					uni.setScreenBrightness({
-						value: 1
-					});
-					card.getPayQRCode(_this.CARD_AccNum).then(res => {
-						_this.QRCode = res.data.QRCode;
-						drawById.call(wx, "payQrcode", {
-							text: res.data.QRCode,
-							// 二维码内容
-							width: _this.windowWidth * 0.9,
-							// 宽度 px内容自动转换像素比
-							height: _this.windowWidth * 0.9 // 高度
-
-						});
-						qrCodeInfoInterval = setInterval(this.QRCode.getInfo, 2000);
-					}).catch(err => {
-						uni.showToast({
-							title: err.errMsg,
-							icon: "none"
-						});
-					});
-				} else {
-					// 关闭二维码
-					console.log("调整屏幕亮度至-->" + this.screenBrightness);
-					uni.setNavigationBarTitle({
-						title: "我的一卡通"
-					});
-					uni.setNavigationBarColor({
-						frontColor: "#000000",
-						backgroundColor: "#fff"
-					});
-					uni.setScreenBrightness({
-						value: this.screenBrightness
-					});
-					clearInterval(qrCodeInfoInterval);
-					qrCodeInfoInterval = null;
-				}
-
-				this.setData({
-					showQRCode: !this.showQRCode
-				});
-			},
-			// 付款结果
-			bindShowPayRet: function() {
-				uni.setNavigationBarTitle({
-					title: "我的一卡通"
-				});
-				this.setData({
-					showPayRet: !this.showPayRet
-				});
-				this.getWalletDetail();
-				this.getDealRec(0, "", 0, 0);
-			},
-
 			item() {
 				console.log("占位：函数 item 未声明");
 			}
@@ -606,72 +295,6 @@
 		padding: 0.1rem;
 	}
 
-	.card-qrcode-btn {
-		color: #fff;
-		position: fixed;
-		bottom: 0.5rem;
-		background: #2347bd;
-		border-radius: 41%;
-		width: 3rem;
-		text-align: center;
-		box-shadow: 0 0.03rem 1.12rem rgba(0, 33, 130, .6);
-	}
-
-	/* 二维码 */
-	.QRCode {
-		background-image: linear-gradient(#ff5c15, #ff005a);
-		position: fixed;
-		height: 100%;
-		width: 100%;
-	}
-
-	.QRContent {
-		position: relative;
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.QRItem {
-		margin-bottom: 1.8rem;
-		margin-top: 2rem;
-	}
-
-	.refresh {
-		animation: refresh 1s linear infinite;
-	}
-
-	/* 
-    turn : 定义的动画名称
-    1s : 动画时间
-    linear : 动画以何种运行轨迹完成一个周期
-    infinite :规定动画应该无限次播放
-   */
-	@keyframes refresh {
-		0% {
-			-webkit-transform: rotate(0deg);
-		}
-
-		25% {
-			-webkit-transform: rotate(90deg);
-		}
-
-		50% {
-			-webkit-transform: rotate(180deg);
-		}
-
-		75% {
-			-webkit-transform: rotate(270deg);
-		}
-
-		100% {
-			-webkit-transform: rotate(360deg);
-		}
-	}
-
-	/* 二维码 End */
 
 	@media (prefers-color-scheme: dark) {
 

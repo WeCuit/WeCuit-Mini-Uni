@@ -27,7 +27,7 @@
 <script>
 	const log = require('../../../utils/log.js')
 	import {LoginObj, CaptchaDecode} from '../../../utils/login/login.js'
-	import {postRegister} from './api.js'
+	import {postBind} from './api.js'
 	import {RSAEncrypt} from '../../../utils/rsa/index.js'
 	const app = getApp()
 	export default {
@@ -80,7 +80,7 @@
 					})
 					let tgc = loginCookie.match(/TGC=(.*?);/);
 					let pass = RSAEncrypt(this.userPass)
-					const reg = await postRegister(this.userId, pass)
+					const reg = await postBind(this.userId, pass)
 					log.info(reg)
 					const data = reg.data.data;
 					if(data.result === true){

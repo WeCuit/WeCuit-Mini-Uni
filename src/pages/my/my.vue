@@ -3,34 +3,28 @@
 		<Info :userid="uid" :stuid="sid"></Info>
 
 		<uni-card title="账号相关">
-			<label v-if="!register" class="label">
-				<view class="loginBtn" @click="developing">
+			<label v-if="uid < 0" class="label">
+				<navigator class="loginBtn" url="/pages/my/register/register" open-type="navigate">
 					<view>
 						注册账户
+					</view>
+					<view class="subicon-r iconfont icon-arr-right"></view>
+				</navigator>
+			</label>
+			<label v-else class="label">
+				<view class="loginBtn" @click="developing">
+					<view>
+						注销账户
 					</view>
 					<view class="subicon-r iconfont icon-arr-right"></view>
 				</view>
-				<!-- <navigator class="loginBtn" url="/pages/my/register/register" open-type="navigate">
-					<view>
-						注册账户
-					</view>
-					<view class="subicon-r iconfont icon-arr-right"></view>
-				</navigator> -->
 			</label>
 			<label class="label">
 				<navigator class="loginBtn" url="/pages/my/sso/sso" open-type="navigate">统一登录中心</navigator>
 				<view class="subicon-r iconfont icon-arr-right"></view>
 			</label>
 			<label class="label last-label">
-				<view class="loginBtn" @click="developing">
-						<!-- #ifdef MP-WEIXIN -->
-						绑定QQ
-						<!-- #endif -->
-						<!-- #ifdef MP-QQ -->
-						绑定微信
-						<!-- #endif -->
-				</view>
-				<!-- <navigator class="loginBtn" url="/pages/my/bind/bind" open-type="navigate">
+				<navigator class="loginBtn" url="/pages/my/bind/mini" open-type="navigate">
 					<view>
 						<!-- #ifdef MP-WEIXIN -->
 						绑定QQ
@@ -40,7 +34,7 @@
 						<!-- #endif -->
 					</view>
 					<view class="subicon-r iconfont icon-arr-right"></view>
-				</navigator> -->
+				</navigator>
 			</label>
 			
 		</uni-card>
@@ -93,6 +87,16 @@
 				<view class="subicon-r iconfont icon-arr-right"></view>
 			</navigator>
 			<!-- #endif -->
+			<label @tap="developing" class="label">
+				<view class="subicon iconfont icon-yonghuxieyi"></view>
+				<view>用户协议</view>
+				<view class="subicon-r iconfont icon-arr-right"></view>
+			</label>
+			<label @tap="developing" class="label">
+				<view class="subicon iconfont icon-yinsizhengce"></view>
+				<view>隐私政策</view>
+				<view class="subicon-r iconfont icon-arr-right"></view>
+			</label>
 			<label @tap="bindThanks" class="label last-label">
 				<view class="subicon iconfont icon-guanyu" style="color:orange"></view>
 				<view @tap="bindThanks">关于</view>
@@ -117,7 +121,6 @@
 	export default {
 		data() {
 			return {
-				register: false,
 				uid: -1,
 				sid: null
 			};
@@ -131,9 +134,6 @@
 		 * 生命周期函数--监听页面加载
 		 */
 		onLoad: function(options) {
-			this.register = app.globalData.userInfo.uid > 0
-			this.uid = app.globalData.userInfo.uid
-			this.sid = app.globalData.userInfo.sid
 		},
 		
 		/**
@@ -150,6 +150,7 @@
 		 * 生命周期函数--监听页面显示
 		 */
 		onShow: function() {
+			this.uid = app.globalData.userInfo.uid
 			this.sid = app.globalData.userInfo.sid
 		},
 
