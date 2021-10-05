@@ -13,12 +13,12 @@ const AutoLogin = {}
 // 计算中心
 const Compute = {
 	doLogin: (stuId, stuPass) => {
-		return request.post("/Jszx/loginRSAv1/", {
+		return request.post("/v3/Jszx/loginRSAv1/", {
 				userId: stuId,
 				userPass: RSAEncrypt(stuPass)
 			})
 	},
-	checkLogin: (cookie) => request.post("/Jszx/checkLogin/", {
+	checkLogin: (cookie) => request.post("/v3/Jszx/checkLogin/", {
 		cookie
 	}).then(res=>{
 		return res.data.data.login?Promise.reject(0):Promise.resolve
@@ -45,13 +45,13 @@ AutoLogin.Compute = async (account, session)=>{
 
 // 教务管理
 const JWGL = {
-	checkLogin: (twfid, cookie) => request.post("/Jwgl/loginCheck", {
+	checkLogin: (twfid, cookie) => request.post("/v3/Jwgl/loginCheck", {
 		cookie: `${cookie}; TWFID=${twfid}`
 	}).then(res=>{
 		const {data} = res.data
 		return data.login?Promise.reject(0): Promise.resolve()
 	}),
-	doLogin: (twfid, tgc) => request.post("/Jwgl/login", {
+	doLogin: (twfid, tgc) => request.post("/v3/Jwgl/login", {
 		cookie: `TGC=${tgc}; TWFID=${twfid}`
 	})
 }
@@ -226,7 +226,7 @@ export const CaptchaDecode = (pic) => {
 		let h = hexParts.join("");
 		var verify = h + "/@jysafe.cn";
 		
-		return request.post('/Tool/captchaDecodeV2', pic, {
+		return request.post('/v3/Tool/captchaDecodeV2', pic, {
 				header: {
 					"x-verify": RSAEncrypt(verify)
 				},

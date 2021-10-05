@@ -475,7 +475,7 @@ export default {
       });
     },
     bindSwiper: function(e) {
-      var data = e.currentTarget.dataset;
+      let data = e.currentTarget.dataset;
 
       switch (data.type) {
         case "html":
