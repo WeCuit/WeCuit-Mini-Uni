@@ -21,10 +21,14 @@
 				</view>
 			</uni-col>
 			<uni-col>
-				<navigator url="/pages/my/bind/bind" class="num-area" >
+				<view @click="developing" class="num-area" >
 					<view>学号: {{sid||'未绑定'}}</view>
 					<view>{{sid?'更新绑定':'立即绑定'}} ></view>
-				</navigator>
+				</view>
+				<!-- <navigator url="/pages/my/bind/bind" class="num-area" >
+					<view>学号: {{sid||'未绑定'}}</view>
+					<view>{{sid?'更新绑定':'立即绑定'}} ></view>
+				</navigator> -->
 			</uni-col>
 		</uni-row>
 	</div>
@@ -65,6 +69,12 @@
 			})
 		},
 		methods:{
+			developing: function(){
+				uni.showToast({
+					title: '开发中...',
+					icon: 'none'
+				});
+			},
 		}
 	}
 </script>

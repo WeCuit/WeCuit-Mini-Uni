@@ -1,5 +1,6 @@
 <template>
 	<view class="my-register">
+		<view style="color:red">注意，本功能还处于线上测试阶段，暂不建议注册账户</view>
 		<button type="primary" @click="doRegister">注册</button>
 	</view>
 </template>

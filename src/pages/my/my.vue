@@ -19,11 +19,7 @@
 					<view class="subicon-r iconfont icon-arr-right"></view>
 				</view>
 			</label>
-			<label class="label">
-				<navigator class="loginBtn" url="/pages/my/sso/sso" open-type="navigate">统一登录中心</navigator>
-				<view class="subicon-r iconfont icon-arr-right"></view>
-			</label>
-			<label class="label last-label">
+			<label v-if="uid>0" class="label">
 				<navigator class="loginBtn" url="/pages/my/bind/mini" open-type="navigate">
 					<view>
 						<!-- #ifdef MP-WEIXIN -->
@@ -35,6 +31,10 @@
 					</view>
 					<view class="subicon-r iconfont icon-arr-right"></view>
 				</navigator>
+			</label>
+			<label class="label last-label">
+				<navigator class="loginBtn" url="/pages/my/sso/sso" open-type="navigate">统一登录中心</navigator>
+				<view class="subicon-r iconfont icon-arr-right"></view>
 			</label>
 			
 		</uni-card>
