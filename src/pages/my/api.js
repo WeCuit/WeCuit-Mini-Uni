@@ -11,7 +11,7 @@ export const ssoLogout = cookie => {
 
 // 教务管理登录检查
 export const jwglLoginCheck = cookie => {
-	return request.post("/Jwgl/loginCheck", {
+	return request.post("/v3/Jwgl/loginCheck", {
 		cookie
 	});
 };

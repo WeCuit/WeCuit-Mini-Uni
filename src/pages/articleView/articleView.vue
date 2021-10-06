@@ -176,7 +176,7 @@ export default {
           break;
 
         default:
-          var url = app.globalData.API_DOMAIN + '/News/getContent?link=' + this.link;
+          let url = app.globalData.API_DOMAIN + '/v3/News/getContent?link=' + this.link;
           this.loadLink(url);
           break;
       }
@@ -215,7 +215,7 @@ export default {
         if (0 != href.indexOf('http') && 0 != href.indexOf('/')) href = '/' + href;
         let type = href.substr(href.lastIndexOf('.') + 1);
         uni.downloadFile({
-          url: app.globalData.API_DOMAIN + '/File/transferV2/type.' + type + '?link=' + encodeURIComponent(href) + '&page=' + this.link,
+          url: app.globalData.API_DOMAIN + '/v3/File/transferV2/type.' + type + '?link=' + encodeURIComponent(href) + '&page=' + this.link,
           success: function (res) {
             if (200 != res.statusCode) {
               uni.showToast({

@@ -15,12 +15,10 @@ if (MODE !== 'prod') {
 }
 
 const API_DOMAIN = {
-  dev1: 'http://192.168.1.232/api',
-  dev2: 'http://127.0.0.1:8080/WeCuit/Api',
+  dev1: 'http://192.168.1.232:8080',
   dev3: 'http://127.0.0.1:8080',
-  test: 'https://test.cuit.api.jysafe.cn/v3',
-  prod: 'https://cuit.api.jysafe.cn/v3',
-  prod2: 'https://cuit.api.jysafe.cn/v2'
+  test: 'https://test.cuit.api.jysafe.cn',
+  prod: 'https://cuit.api.jysafe.cn'
 };
 module.exports = {
   RSAPubKey: RSAPubKey,
