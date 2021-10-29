@@ -9,7 +9,7 @@ name: Build CI
 #写法二：在master分支的push操作时触发构建
 on:
     push:
-        branches: [master]
+        branches: [master, tabbar]
     pull_request:
         branches: [master]
 

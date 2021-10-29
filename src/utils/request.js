@@ -16,6 +16,7 @@ let auth = null;
 function httpBase(method, url, data, config = {}) {
 	if(auth === null)
 		auth = getApp().globalData?.token?.auth ?? null
+	config.unloginNotice = config?.unloginNotice ?? true
   const requestUrl = (url.indexOf("http") === 0 ? '' : baseUrl) + url;
   const header = {
     'Content-Type': 'application/json'
@@ -81,7 +82,7 @@ function httpBase(method, url, data, config = {}) {
             });
             return;
           } else if (code === 401 // SSO页面请求，不弹框
-          && url !== "/Jwgl/loginCheck") {
+          && config.unloginNotice) {
             // 未登录
             uni.showModal({
               cancelColor: 'red',

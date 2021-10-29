@@ -128,6 +128,7 @@
 <script>
 const app = getApp();
 import { getCourseOption, getCourseTable } from "./api";
+import log from '../../utils/log.js'
 
 export default {
   data() {
@@ -584,6 +585,7 @@ export default {
           this.setData(tempData);
         })
         .catch(err => {
+					log.info(err)
           return;
         });
     },
