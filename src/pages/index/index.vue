@@ -190,12 +190,11 @@ export default {
       menuList: [
         [
           {
-            path: "../courseTable/courseTable",
+            path: "../newsList/newsList?source=home",
             size: 30,
-            color: "orange",
-            needLogin: false,
-            icon: "icon-kebiao",
-            text: "个人课表"
+            color: "pink",
+            icon: "icon-icnews",
+            text: "学校资讯"
           },
           {
             path: "../grade/grade",

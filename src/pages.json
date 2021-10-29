@@ -50,6 +50,7 @@
             "path" : "pages/courseTable/courseTable",
             "style" : {
                 "enablePullDownRefresh" : true,
+                "navigationBarTitleText" : "课表",
                 "backgroundTextStyle" : "dark"
             }
         },
@@ -75,12 +76,6 @@
             "style" : {
                 "enablePullDownRefresh" : true,
                 "navigationBarTitleText" : "成绩查询"
-            }
-        },
-        {
-            "path" : "pages/homeNews/homeNews",
-            "style" : {
-                "disableScroll" : true
             }
         },
         {
@@ -276,16 +271,16 @@
         "selectedColor" : "#3cc51f",
         "list" : [
             {
+                "pagePath" : "pages/courseTable/courseTable",
+                "iconPath" : "static/courseTable.png",
+                "selectedIconPath" : "static/courseTable-selected.png",
+                "text" : "课表"
+            },
+            {
                 "pagePath" : "pages/index/index",
                 "iconPath" : "static/index.png",
                 "selectedIconPath" : "static/index-selected.png",
                 "text" : "首页"
-            },
-            {
-                "pagePath" : "pages/homeNews/homeNews",
-                "text" : "资讯",
-                "iconPath" : "static/news.png",
-                "selectedIconPath" : "static/news-selected.png"
             },
             {
                 "pagePath" : "pages/my/my",
