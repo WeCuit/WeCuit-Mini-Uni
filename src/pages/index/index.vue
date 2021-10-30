@@ -192,35 +192,30 @@ export default {
           {
             path: "../newsList/newsList?source=home",
             size: 30,
-            color: "pink",
             icon: "icon-icnews",
             text: "学校资讯"
           },
           {
             path: "../grade/grade",
             size: 30,
-            color: "pink",
             icon: "icon-zhuxingtu",
             text: "成绩"
           },
           {
             path: "../exam/exam",
             size: 30,
-            color: "green",
             icon: "icon-kaoshi",
             text: "考试"
           },
           {
             path: "../newsList/newsList?source=jwc",
             size: 30,
-            color: "rgb(0,255,255)",
             icon: "icon-tongzhi",
             text: "教务公告"
           },
           {
             path: "../card/card",
             size: 30,
-            color: "purple",
             icon: "icon-yiqiatong",
             needLogin: true,
             text: "一卡通"
@@ -228,7 +223,6 @@ export default {
           {
             path: "../checkIn/list",
             size: 30,
-            color: "#1296db",
             icon: "icon-daka",
             needLogin: true,
             text: "每日打卡"
@@ -242,7 +236,6 @@ export default {
           {
             path: "/welcome/pages/welcome",
             size: 30,
-            color: "#185f97",
             action: "bindAction",
             icon: "icon-xinshengfuwu",
             text: "新生服务"
@@ -256,7 +249,6 @@ export default {
           {
             path: "../calendar/calendar",
             size: 30,
-            color: "#32CD32",
             text: "校历/地图",
             icon: "icon-calendar"
           }
@@ -285,21 +277,19 @@ export default {
           {
             path: "/college/pages/list/list",
             size: 30,
-            color: "purple",
             icon: "icon-xueyuan",
             text: "学院信息"
-          } // {
-          //     path: "../THEOL/THEOL",
-          //     size: 30,
-          //     color: "purple",
-          //     needLogin: true,
-          //     icon: "icon-jiaoxuepingtai",
-          //     text: "教学平台",
-          // },
+          },
+					{
+              path: "../THEOL/THEOL",
+              size: 30,
+              needLogin: true,
+              icon: "icon-jiaoxuepingtai",
+              text: "教学平台",
+          },
           // {
           //     path: "",
           //     size: 30,
-          //     color: "purple",
           //     icon: "",
           //     text: "测试",
           // },

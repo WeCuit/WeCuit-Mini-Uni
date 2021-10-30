@@ -9,6 +9,8 @@
 const app = getApp();
 import mytree from "../../../components/mytree/mytree";
 import mpLoading from "../../../miniprogram_npm/weui-miniprogram/loading/loading";
+import {getDirTree} from '../api.js'
+import log from '../../../utils/log.js'
 
 export default {
   data() {
@@ -39,7 +41,7 @@ export default {
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function() {
-    this.onPullDownRefresh();
+    this.loadDirTree(this.courseId);
   },
 
   /**
@@ -61,7 +63,7 @@ export default {
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function() {
-    this.getDirTree(this.courseId);
+    this.loadDirTree(this.courseId);
   },
 
   /**
@@ -75,35 +77,16 @@ export default {
   onShareAppMessage: function() {},
   methods: {
     tapDirItem: function(e) {
+			log.info("tapDirItem")
       uni.navigateTo({
         url: "../dir/dir?lid=" + this.courseId + "&folderId=" + e.detail.itemid
       });
     },
-    getDirTree: function(lid) {
-      uni.request({
-        url: app.globalData.API_DOMAIN + "/Theol/dirTree?lid=" + lid,
-        success: res => {
-          var data = res.data;
-
-          if (2000 == data.status) {
-            this.setData({
-              treeData: data.dir
-            });
-          } else {
-            uni.showToast({
-              icon: "none",
-              title: data.errMsg
-            });
-          }
-        },
-        fail: err => {
-          uni.showToast({
-            icon: "none",
-            title: "请求失败"
-          });
-          reject(err);
-        }
-      });
+    loadDirTree: function(lid) {
+			getDirTree(lid).then(res=>{
+				const resp = res.data
+				this.treeData = resp.dir
+			})
     }
   }
 };
