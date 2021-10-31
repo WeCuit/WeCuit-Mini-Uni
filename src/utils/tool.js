@@ -5,7 +5,7 @@ import { QUERY_SALT } from '../config';
  * @param {*} path /??/???/
  */
 
-function genQuerySign(path, openid, str_data = '') {
+export const genQuerySign = function genQuerySign(path, openid, str_data = '') {
   if ("string" !== typeof openid || openid.length == 0) {
     uni.showToast({
       icon: 'none',
@@ -18,6 +18,13 @@ function genQuerySign(path, openid, str_data = '') {
   return md5(md5(path) + md5(openid) + md5('' + str_data) + QUERY_SALT);
 }
 
-module.exports = {
-  genQuerySign: genQuerySign
-};
+export const calByte2Size = (size, n=2) =>{
+	let result = size;
+	if(result < 1024)return `${result.toFixed(n)}字节`
+	result /= 1024;
+	if(result < 1024)return `${result.toFixed(n)}KB`
+	result /= 1024;
+	if(result < 1024)return `${result.toFixed(n)}MB`
+	result /= 1024;
+	if(result < 1024)return `${result.toFixed(n)}GB`
+}

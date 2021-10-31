@@ -69,7 +69,7 @@
                       <text class="grid-item-label">{{item.text}}</text>
                     </view>
                   </view>
-                  <view v-if="!isADClose && i==1 && j==2" class="grid-item-child" style="width:50%">
+                  <view v-if="!isADClose && i==1 && j==4" class="grid-item-child" style="width:50%">
                     <ad
                       unit-id="cc64587dbbb385f7537d2b3a4f3b56fd"
                       type="block"
@@ -287,12 +287,13 @@ export default {
               icon: "icon-jiaoxuepingtai",
               text: "教学平台",
           },
-          // {
-          //     path: "",
-          //     size: 30,
-          //     icon: "",
-          //     text: "测试",
-          // },
+          {
+              path: "../resources/list",
+              size: 30,
+              needLogin: true,
+              icon: "icon-ziliaoku",
+              text: "资料下载",
+          },
         ]
       ],
       notice: [],

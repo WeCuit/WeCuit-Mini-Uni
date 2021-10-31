@@ -77,7 +77,6 @@ export default {
   onShareAppMessage: function() {},
   methods: {
     tapDirItem: function(e) {
-			log.info("tapDirItem")
       uni.navigateTo({
         url: "../dir/dir?lid=" + this.courseId + "&folderId=" + e.detail.itemid
       });

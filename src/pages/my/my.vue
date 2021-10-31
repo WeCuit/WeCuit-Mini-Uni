@@ -97,11 +97,11 @@
 				<view>隐私政策</view>
 				<view class="subicon-r iconfont icon-arr-right"></view>
 			</label>
-			<label @tap="bindThanks" class="label last-label">
+			<navigator class="label last-label" url="/pages/my/about" open-type="navigate">
 				<view class="subicon iconfont icon-guanyu" style="color:orange"></view>
-				<view @tap="bindThanks">关于</view>
+				<view>关于</view>
 				<view class="subicon-r iconfont icon-arr-right"></view>
-			</label>
+			</navigator>
 			<!-- <label style="color:red" @tap="bindLogout" class="label">
 				<view class="subicon iconfont icon-tuichu"></view>
 				<view>退出登录</view>
@@ -214,12 +214,6 @@
 						} else if (res.cancel) {}
 					}
 
-				});
-			},
-			bindThanks: function() {
-				uni.navigateTo({
-					url: '/pages/articleView/articleView?link=' + app.globalData.API_DOMAIN + app.globalData
-						.config['about-link']
 				});
 			},
 			bindLogout: function() {

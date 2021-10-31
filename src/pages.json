@@ -203,7 +203,19 @@
         {
             "path" : "pages/terms/privacy",
             "style" : {
-							"navigationBarTitleText" : "隐私政策"
+                "navigationBarTitleText" : "隐私政策"
+            }
+        },
+        {
+            "path" : "pages/resources/list",
+            "style" : {
+                "navigationBarTitleText" : "资料下载"
+            }
+        },
+        {
+            "path" : "pages/my/about",
+            "style" : {
+                "navigationBarTitleText" : "关于We成信大"
 						}
         }
     ],
@@ -351,6 +363,18 @@
                 "id" : 6,
                 "name" : "bindmini", //模式名称
                 "path" : "/pages/my/bind/mini", //启动页面，必选
+                "query" : "" //启动参数，在页面的onLoad函数里面得到
+            },
+            {
+                "id" : 7,
+                "name" : "resources", //模式名称
+                "path" : "/pages/resources/list", //启动页面，必选
+                "query" : "" //启动参数，在页面的onLoad函数里面得到
+            },
+            {
+                "id" : 8,
+                "name" : "about", //模式名称
+                "path" : "/pages/my/about", //启动页面，必选
                 "query" : "" //启动参数，在页面的onLoad函数里面得到
             }
         ]

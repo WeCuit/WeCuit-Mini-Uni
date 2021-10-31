@@ -100,11 +100,9 @@ export default {
 			  }
 				
 				// 尝试登录教学平台
-				log.info("resp", resp)
 			  if (21401 == resp.code) {
 			    if (this.isFirstLoginTry) {
 			      this.isFirstLoginTry = false;
-						log.info(1)
 			      this.THEOL_Login(this.sessionInfo.theolCookie)
 						.then(this.loadCourseList)
 						.catch(err => {
@@ -148,7 +146,6 @@ export default {
       });
     },
     bindViewCourseDir: function (e) {
-			log.info(e)
       var data = e.currentTarget.dataset;
       uni.navigateTo({
         url: "tree/tree?courseId=" + data.courseid
