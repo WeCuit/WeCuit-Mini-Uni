@@ -46,6 +46,10 @@
           </view>
         </view>
       </view>
+			
+			<view v-if="!isADClose" style="margin-top:4rem">
+			  <ad unit-id="a787d6d9637a2c0c6c69d927e301c9d2" type="card"></ad>
+			</view>
     </view>
   </view>
 </template>
@@ -72,7 +76,8 @@ export default {
       isSysSub: false,
       sessionInfo: {},
       isFirstOpenSSO: true,
-      n: ""
+      n: "",
+			isADClose: false
     };
   },
 
@@ -84,6 +89,7 @@ export default {
    */
   onLoad: function(options) {
     this.sessionInfo = app.globalData.sessionInfo;
+		this.isADClose = app.globalData.isADClose;
   },
 
   /**

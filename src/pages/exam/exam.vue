@@ -28,6 +28,10 @@
 				<view>考试备注：{{item.remark}}</view>
 			</view>
 		</view>
+		
+		<view v-if="!isADClose" style="margin-top:4rem">
+			<ad unit-id="a787d6d9637a2c0c6c69d927e301c9d2" type="card"></ad>
+		</view>
 	</view>
 </template>
 
@@ -60,7 +64,8 @@
 				termIndex: [0, 0],
 				termData: {},
 				sessionInfo: {},
-				isFirstOpenSSO: true
+				isFirstOpenSSO: true,
+				isADClose: false
 			};
 		},
 
@@ -71,6 +76,7 @@
 		 * 生命周期函数--监听页面加载
 		 */
 		onLoad: function(options) {
+			this.isADClose = app.globalData.isADClose;
 			this.initData();
 		},
 

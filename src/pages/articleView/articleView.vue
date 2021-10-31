@@ -81,9 +81,7 @@ export default {
      * @link
      * 
      */
-    this.setData({
-      isADClose: app.globalData.isADClose
-    });
+    this.isADClose = app.globalData.isADClose;
 
     if ("undefined" !== typeof options.link) {
       this.source = 'html';

@@ -30,6 +30,10 @@
 				\n数据来源：\n{{repo}}
 			</text>
 		</view>
+		
+		<view v-if="!isADClose" style="margin-top:4rem">
+		  <ad unit-id="a787d6d9637a2c0c6c69d927e301c9d2" type="card"></ad>
+		</view>
 		<view v-if="downloading" class="downFrame">
 			<view class="main">
 				<view class="title">正在下载</view>
@@ -49,6 +53,7 @@
 	import API from './api.js';
 	import log from '../../utils/log.js';
 	import { calByte2Size } from '../../utils/tool.js'
+	const app = getApp();
 	
 	export default {
 		data() {
@@ -64,11 +69,13 @@
 				downLoadTask: null,
 				baseDir: `${wx.env.USER_DATA_PATH}/cuit_resources`,
 				repo: 'https://github.com/andream7/cuit_sharing',
-				saveDir: ''
+				saveDir: '',
+				isADClose: false
 			}
 		},
 		props: {},
 		onLoad: function(options){
+			this.isADClose = app.globalData.isADClose;
 			const fs = uni.getFileSystemManager();
 			try{
 				fs.renameSync(`${wx.env.USER_DATA_PATH}/123`, `${wx.env.USER_DATA_PATH}/456`)
