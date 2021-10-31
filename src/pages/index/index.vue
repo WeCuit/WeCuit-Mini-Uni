@@ -360,18 +360,12 @@ export default {
       });
     }
 
-    if (typeof this.getTabBar === "function" && this.getTabBar()) {
-      this.getTabBar().setData({
-        selected: 0
-      });
-    }
-
-			// #ifdef MP-QQ
-      // qq 添加群应用
-      this.checkGroupAdmin();
-			// #endif
+		// #ifdef MP-QQ
+		// qq 添加群应用
+		this.checkGroupAdmin();
+		// #endif
     
-		 // 一卡通余额
+		// 一卡通余额
     uni.getStorage({
       key: "CARD_AccNum",
       success: res => {
@@ -443,7 +437,7 @@ export default {
         .catch(err => {});
     },
     bindAction: function(e) {
-      var data = e.currentTarget.dataset;
+      let data = e.currentTarget.dataset;
       console.log("bindAction", data);
 
       if (data.needlogin && !app.globalData.isUser) {
@@ -792,7 +786,7 @@ export default {
         return;
       }
 
-      var hkg = true;
+      let hkg = true;
       if ("hkg" !== app.globalData.location) hkg = false;
 
       switch (startTime) {

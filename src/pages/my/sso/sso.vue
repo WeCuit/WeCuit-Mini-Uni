@@ -187,6 +187,11 @@
 
 				this.SSOLogin().then(res=>{
 					this.isNeedLogin = false
+					uni.setStorage({
+						key: 'isUser',
+						data: true
+					})
+					app.globalData.isUser = true
 					this.OtherLogin()
 				}).catch(err=>{
 					log.error('formSubmit err -> ', err)

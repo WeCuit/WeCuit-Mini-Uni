@@ -4,7 +4,7 @@
 		<view class="info">
 			<view class="left">
 				<view>We成信大</view>
-				<view style="font-size: small;margin-left: 20rpx;">1.0.7</view>
+				<view style="font-size: small;margin-left: 20rpx;">{{changelog[0].version}}</view>
 			</view>
 			<view style="margin-right: 20rpx;" @click="about = !about">{{about?'更新日志':'关于'}}</view>
 		</view>
