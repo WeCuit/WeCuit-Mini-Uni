@@ -56,7 +56,7 @@
 				list: [],
 				parent: [],
 				dir: [],
-				downloadPre: 'https://raw.githubusercontents.com/WeCuit/cuit_sharing/main/',
+				downloadPre: 'https://github.jysafe.cn/cuit_sharing/main/',
 				current: null,
 				downloading: false,
 				progress: 0,
@@ -262,8 +262,10 @@
 			},
 			downCancle(){
 				this.downloading = false;
-				this.downLoadTask.abort()
-				this.downLoadTask = null
+				if(this.downLoadTask != null){
+					this.downLoadTask.abort()
+					this.downLoadTask = null
+				}
 			},
 			copyRepo(){
 				uni.showModal({
