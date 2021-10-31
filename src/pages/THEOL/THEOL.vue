@@ -1,11 +1,13 @@
 <template>
 <!-- pages/THEOL/THEOL.wxml -->
-<mp-cells title="课程列表">
-    <mp-cell v-for="(item, index) in list" :key="index" ext-class="my-cell" :data-courseId="item.courseId" @tap="bindViewCourseDir">
-        <view>{{item.course}}</view>
-        <view class="footer" slot="footer">{{item.teacher}}({{item.college}})</view>
-    </mp-cell>
-</mp-cells>
+	<mp-cells title="课程列表">
+		<block v-for="(item, index) in list" :key="index">
+			<mp-cell ext-class="my-cell">
+				<view :data-courseId="item.courseId" @tap="bindViewCourseDir">{{item.course}}</view>
+				<view class="footer" slot="footer" :data-courseId="item.courseId" @tap="bindViewCourseDir">{{item.teacher}}({{item.college}})</view>
+			</mp-cell>
+		</block>
+	</mp-cells>
 </template>
 
 <script>
@@ -14,6 +16,7 @@ import { getCourseList, theolLogin } from './api';
 const app = getApp();
 import mpCell from "../../miniprogram_npm/weui-miniprogram/cell/cell";
 import mpCells from "../../miniprogram_npm/weui-miniprogram/cells/cells";
+import log from "../../utils/log.js"
 
 export default {
   data() {
@@ -41,7 +44,7 @@ export default {
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    this.onPullDownRefresh();
+    this.loadCourseList();
   },
 
   /**
@@ -63,56 +66,7 @@ export default {
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    uni.showLoading({
-      title: "加载课程列表~"
-    });
-    this.getCourseList().then(res => {
-      this.setData({
-        list: res.list
-      });
-      uni.hideLoading();
-    }).catch(err => {
-      // 教学平台未登录
-      if ("undefined" !== typeof err.theolCookie) {
-        // cookie需要更新
-        this.sessionInfo.theolCookie = err.theolCookie;
-        uni.setStorage({
-          key: "theolCookie",
-          data: err.theolCookie
-        });
-      } // 尝试登录教学平台
-
-
-      if (21401 == err.errorCode) {
-        if (this.isFirstLoginTry) {
-          this.isFirstLoginTry = false;
-          this.THEOL_Login(this.sessionInfo.theolCookie).then(this.onPullDownRefresh).catch(err => {
-            console.log(err);
-
-            if (12401 == err.errorCode) {
-              this.isFirstLoginTry = true;
-              setTimeout(() => {
-                uni.navigateTo({
-                  url: "../my/sso/sso"
-                });
-              }, 1000);
-            }
-          });
-        }
-      } else {
-        if (err.errMsg) {
-          uni.showToast({
-            icon: "none",
-            title: err.errMsg
-          });
-        } else {
-          uni.showToast({
-            icon: "none",
-            title: "未知异常"
-          });
-        }
-      }
-    });
+    this.loadCourseList()
   },
 
   /**
@@ -125,6 +79,61 @@ export default {
    */
   onShareAppMessage: function () {},
   methods: {
+		loadCourseList: function(){
+			uni.showLoading({
+			  title: "加载课程列表~"
+			});
+			this.getCourseList().then(res => {
+				const resp = res.data
+			  this.list = resp.list
+			  uni.hideLoading();
+			}).catch(err => {
+				const resp = err.data
+			  // 教学平台未登录
+			  if ("undefined" !== typeof resp.theolCookie) {
+			    // cookie需要更新
+			    this.sessionInfo.theolCookie = resp.theolCookie;
+			    uni.setStorage({
+			      key: "theolCookie",
+			      data: resp.theolCookie
+			    });
+			  }
+				
+				// 尝试登录教学平台
+			  if (21401 == resp.code) {
+			    if (this.isFirstLoginTry) {
+			      this.isFirstLoginTry = false;
+			      this.THEOL_Login(this.sessionInfo.theolCookie)
+						.then(this.loadCourseList)
+						.catch(err => {
+							const resp = err.data
+			        console.log(resp);
+			
+			        if (12401 == resp.code) {
+			          this.isFirstLoginTry = true;
+			          setTimeout(() => {
+			            uni.navigateTo({
+			              url: "../my/sso/sso"
+			            });
+			          }, 1000);
+			        }
+			      });
+			    }
+			  } else {
+			    if (err.msg) {
+			      uni.showToast({
+			        icon: "none",
+			        title: err.msg
+			      });
+			    } else {
+			      uni.showToast({
+			        icon: "none",
+			        title: "未知异常"
+			      });
+			    }
+			  }
+			});
+		},
     // 获取课程列表
     getCourseList: function () {
       return getCourseList(this.sessionInfo.theolCookie);

@@ -13,5 +13,7 @@ export const ssoLogout = cookie => {
 export const jwglLoginCheck = cookie => {
 	return request.post("/v3/Jwgl/loginCheck", {
 		cookie
+	},{
+		unloginNotice: false
 	});
 };

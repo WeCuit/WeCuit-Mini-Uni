@@ -7,7 +7,6 @@
         v-for="(item, index) in dir.folder"
         :key="index"
         ext-class="my-cell"
-        :id="item.id"
         :data-courseId="item.courseId"
         @tap="bindViewDir"
       >
@@ -43,6 +42,7 @@
 const app = getApp();
 import mpCell from "../../../miniprogram_npm/weui-miniprogram/cell/cell";
 import mpCells from "../../../miniprogram_npm/weui-miniprogram/cells/cells";
+import {postFolderList} from '../api.js'
 
 export default {
   data() {
@@ -70,7 +70,7 @@ export default {
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function() {
-    this.onPullDownRefresh();
+    this.folderList(this.lid, this.folderId);
   },
 
   /**
@@ -128,7 +128,7 @@ export default {
       uni.downloadFile({
         url:
           app.globalData.API_DOMAIN +
-          "/Theol/downloadFile/1." +
+          "/v3/Theol/downloadFile/1." +
           data.suffix +
           "?" +
           query,
@@ -144,34 +144,11 @@ export default {
       });
     },
     folderList: function(lid, folderId) {
-      uni.request({
-        url: app.globalData.API_DOMAIN + "/Theol/folderList",
-        method: "POST",
-        header: {
-          "content-type": "application/x-www-form-urlencoded"
-        },
-        data: {
-          lid: lid,
-          folderId: folderId,
-          theolCookie: app.globalData.sessionInfo.theolCookie
-        },
-        success: res => {
-          var data = res.data;
-
-          if (2000 === data.status) {
-            this.setData({
-              dir: data.dir
-            });
-          }
-        },
-        fail: err => {
-          uni.showToast({
-            icon: "none",
-            title: "请求失败"
-          });
-          reject(err);
-        }
-      });
+			postFolderList(lid, folderId, app.globalData.sessionInfo.theolCookie)
+			.then(res=>{
+				const resp = res.data;
+				this.dir = resp.dir
+			})
     }
   }
 };

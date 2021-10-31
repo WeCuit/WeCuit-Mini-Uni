@@ -6,7 +6,7 @@
     <view v-if="isBranch" @tap="toggle" :class="'iconfont ' + (open?'icon-shangla':'icon-xiala')"></view>
   </view>
   <view style="padding-left: 50rpx;" v-if="isBranch" :hidden="!open">
-    <mytree v-for="(item, index) in model.childMenus" :key="index" :model="item"></mytree>
+    <mytree v-for="(item, index) in model.childMenus" :key="index" :model="item" @tapitem="tapItem"></mytree>
   </view>
 </view>
 </template>
@@ -33,47 +33,36 @@ export default {
     }
   },
   watch: {
-    model: {
-      handler: function (newVal, oldVal) {
-        var that = this;
-        that.setData({
-          model: newVal,
-          isBranch: Boolean(this.model.childMenus && this.model.childMenus.length)
-        });
+    model: function (newVal) {
+			let that = this;
+			that.setData({
+				model: newVal,
+				isBranch: Boolean(this.model.childMenus && this.model.childMenus.length)
+			});
 
-        if ("undefined" !== typeof this.model.open) {
-          this.setData({
-            open: this.model.open
-          });
-        }
-      },
-      immediate: true,
-      deep: true
-    }
+			if ("undefined" !== typeof this.model.open) {
+				this.open = this.model.open
+			}
+		}
   },
   mounted: function (e) {
-    this.setData({
-      isBranch: Boolean(this.model.childMenus && this.model.childMenus.length)
-    });
+    this.isBranch = Boolean(this.model.childMenus && this.model.childMenus.length)
 
     if ("undefined" !== typeof this.model.open) {
-      this.setData({
-        open: this.model.open
-      });
+      this.open = this.model.open
     }
   },
   methods: {
     // 有子级
     toggle: function (e) {
       if (this.isBranch) {
-        this.setData({
-          open: !this.open
-        });
+        this.open = !this.open
       }
     },
     // 无子级
     tapItem: function (e) {
-      var itemid = e.currentTarget.dataset.itemid;
+			console.log(e)
+      var itemid = e?.currentTarget?.dataset?.itemid || e?.detail?.itemid;
       console.log("组件里点击的id: " + itemid);
       this.$emit("tapitem", {
         detail: {

@@ -117,9 +117,7 @@ export default {
    */
   onShow: function () {
 		// #ifdef MP-QQ
-    if (1 === getCurrentPages().length) {
-      this.fromShare = true
-    }
+		this.fromShare = 1 === getCurrentPages().length
 		// #endif
   },
 
@@ -149,7 +147,6 @@ export default {
    * 分享至微信朋友圈
    */
   onShareTimeline: function (e) {
-    
     return {
       title: this.title,
       query: 'source=' + this.source + '&path=' + this.path + '&domain=' + this.domain

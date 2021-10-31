@@ -35,7 +35,8 @@ export default {
     });
     uni.hideHomeButton();
     this.maintenanceBText = options.BText;
-    this.maintenanceOText = options.OText; // this.getTabBar().setData({
+    this.maintenanceOText = options.OText;
+    // this.getTabBar().setData({
     //     isShow: false,
     // });
   },

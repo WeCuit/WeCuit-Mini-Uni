@@ -12,10 +12,14 @@ let auth = null;
  * @param config.header 请求头
  * @param config.loading 请求加载效果 {0: 正常加载, 1: 表单提交加载效果 }
  * @param config.loadingMsg 请求提示信息
+ * @param config.unloginNotice 未登录提示
+ * @param config.ignoreCode 忽略响应状态码
  */
 function httpBase(method, url, data, config = {}) {
 	if(auth === null)
 		auth = getApp().globalData?.token?.auth ?? null
+	config.unloginNotice = config?.unloginNotice ?? true
+	config.ignoreCode = config.ignoreCode || false
   const requestUrl = (url.indexOf("http") === 0 ? '' : baseUrl) + url;
   const header = {
     'Content-Type': 'application/json'
@@ -54,26 +58,23 @@ function httpBase(method, url, data, config = {}) {
           uni.hideNavigationBarLoading();
         }
 				
+        const resp = res.data || {};
 				// 服务器[响应头]状态码异常检查
         if (res.statusCode !== 200) {
-          const resp = res.data;
-
           if (resp.msg) {
             uni.showToast({
               title: resp.msg,
               icon: 'none'
             });
           }
-
           reject(res);
           return;
         }
 				
 				// 数据响应体状态码异常检查
-        let resp = res.data || {};
         let {code} = resp
 				
-        if (code && code !== 200) {
+        if (config.ignoreCode == false && code && code !== 200) {
           if (503 === code) {
             // 维护提示
             uni.reLaunch({
@@ -81,7 +82,7 @@ function httpBase(method, url, data, config = {}) {
             });
             return;
           } else if (code === 401 // SSO页面请求，不弹框
-          && url !== "/Jwgl/loginCheck") {
+          && config.unloginNotice) {
             // 未登录
             uni.showModal({
               cancelColor: 'red',

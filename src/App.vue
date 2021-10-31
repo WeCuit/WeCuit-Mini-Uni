@@ -24,8 +24,8 @@
 		},
 		// 小程序发生脚本错误或 API 调用报错时触发。
 		onError: function(e) {
-			console.error('onError', e);
-			log.info("onError" + JSON.stringify(e));
+			log.error("onError" + JSON.stringify(e));
+			log.error("message:", e.message)
 		},
 		globalData: {
 			API_DOMAIN,

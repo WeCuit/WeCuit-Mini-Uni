@@ -69,7 +69,7 @@
                       <text class="grid-item-label">{{item.text}}</text>
                     </view>
                   </view>
-                  <view v-if="!isADClose && i==1 && j==2" class="grid-item-child" style="width:50%">
+                  <view v-if="!isADClose && i==1 && j==4" class="grid-item-child" style="width:50%">
                     <ad
                       unit-id="cc64587dbbb385f7537d2b3a4f3b56fd"
                       type="block"
@@ -190,38 +190,32 @@ export default {
       menuList: [
         [
           {
-            path: "../courseTable/courseTable",
+            path: "../newsList/newsList?source=home",
             size: 30,
-            color: "orange",
-            needLogin: false,
-            icon: "icon-kebiao",
-            text: "个人课表"
+            icon: "icon-icnews",
+            text: "学校资讯"
           },
           {
             path: "../grade/grade",
             size: 30,
-            color: "pink",
             icon: "icon-zhuxingtu",
             text: "成绩"
           },
           {
             path: "../exam/exam",
             size: 30,
-            color: "green",
             icon: "icon-kaoshi",
             text: "考试"
           },
           {
             path: "../newsList/newsList?source=jwc",
             size: 30,
-            color: "rgb(0,255,255)",
             icon: "icon-tongzhi",
             text: "教务公告"
           },
           {
             path: "../card/card",
             size: 30,
-            color: "purple",
             icon: "icon-yiqiatong",
             needLogin: true,
             text: "一卡通"
@@ -229,7 +223,6 @@ export default {
           {
             path: "../checkIn/list",
             size: 30,
-            color: "#1296db",
             icon: "icon-daka",
             needLogin: true,
             text: "每日打卡"
@@ -243,7 +236,6 @@ export default {
           {
             path: "/welcome/pages/welcome",
             size: 30,
-            color: "#185f97",
             action: "bindAction",
             icon: "icon-xinshengfuwu",
             text: "新生服务"
@@ -257,7 +249,6 @@ export default {
           {
             path: "../calendar/calendar",
             size: 30,
-            color: "#32CD32",
             text: "校历/地图",
             icon: "icon-calendar"
           }
@@ -286,24 +277,23 @@ export default {
           {
             path: "/college/pages/list/list",
             size: 30,
-            color: "purple",
             icon: "icon-xueyuan",
             text: "学院信息"
-          } // {
-          //     path: "../THEOL/THEOL",
-          //     size: 30,
-          //     color: "purple",
-          //     needLogin: true,
-          //     icon: "icon-jiaoxuepingtai",
-          //     text: "教学平台",
-          // },
-          // {
-          //     path: "",
-          //     size: 30,
-          //     color: "purple",
-          //     icon: "",
-          //     text: "测试",
-          // },
+          },
+					{
+              path: "../THEOL/THEOL",
+              size: 30,
+              needLogin: true,
+              icon: "icon-jiaoxuepingtai",
+              text: "教学平台",
+          },
+          {
+              path: "../resources/list",
+              size: 30,
+              needLogin: true,
+              icon: "icon-ziliaoku",
+              text: "资料下载",
+          },
         ]
       ],
       notice: [],
@@ -370,18 +360,12 @@ export default {
       });
     }
 
-    if (typeof this.getTabBar === "function" && this.getTabBar()) {
-      this.getTabBar().setData({
-        selected: 0
-      });
-    }
-
-			// #ifdef MP-QQ
-      // qq 添加群应用
-      this.checkGroupAdmin();
-			// #endif
+		// #ifdef MP-QQ
+		// qq 添加群应用
+		this.checkGroupAdmin();
+		// #endif
     
-		 // 一卡通余额
+		// 一卡通余额
     uni.getStorage({
       key: "CARD_AccNum",
       success: res => {
@@ -453,7 +437,7 @@ export default {
         .catch(err => {});
     },
     bindAction: function(e) {
-      var data = e.currentTarget.dataset;
+      let data = e.currentTarget.dataset;
       console.log("bindAction", data);
 
       if (data.needlogin && !app.globalData.isUser) {
@@ -802,7 +786,7 @@ export default {
         return;
       }
 
-      var hkg = true;
+      let hkg = true;
       if ("hkg" !== app.globalData.location) hkg = false;
 
       switch (startTime) {
