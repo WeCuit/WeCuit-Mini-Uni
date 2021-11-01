@@ -92,11 +92,11 @@
 				<view>用户协议</view>
 				<view class="subicon-r iconfont icon-arr-right"></view>
 			</label>
-			<label @tap="developing" class="label">
+			<navigator class="label" url="/pages/terms/privacy" open-type="navigate">
 				<view class="subicon iconfont icon-yinsizhengce"></view>
 				<view>隐私政策</view>
 				<view class="subicon-r iconfont icon-arr-right"></view>
-			</label>
+			</navigator>
 			<navigator class="label last-label" url="/pages/my/about" open-type="navigate">
 				<view class="subicon iconfont icon-guanyu" style="color:orange"></view>
 				<view>关于</view>

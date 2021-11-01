@@ -70,6 +70,11 @@
 				about: true,
 				changelog: [
 					{
+						version: '2.2.1',
+						date: '2021/11/01',
+						log: "新增隐私说明"
+					},
+					{
 						version: '2.2.0',
 						date: '2021/10/31',
 						log: "新增资源下载功能"
