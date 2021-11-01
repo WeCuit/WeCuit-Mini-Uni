@@ -11,6 +11,18 @@
 		
 		<view v-if="about" class="detail">
 			<view class="card">
+				<view class="title">简介：</view>
+				<text class="body">
+				We成信大小程序属于个人开发，并非官方小程序。开发者是成信大一名学生。
+				</text>
+			</view>
+			<view class="card">
+				<view class="title">关联小程序</view>
+				<text class="body" @click="copyText(appId)">
+				AppID：<text style="text-decoration: underline;color: blue;">{{appId}}</text>(点击复制)
+				</text>
+			</view>
+			<view class="card">
 				<view class="title">项目参与人员：</view>
 				<text class="body">
 				小程序主体  ---  计科196 msojocs
@@ -25,6 +37,17 @@
 				前端技术栈：vue.js
 				后端技术栈：Springboot/Mysql/Python
 				使用Github Actions实现持续集成（CI）, 前后端、小程序构建部署完全自动化。\n\n
+				</text>
+			</view>
+			<view class="card">
+				<view class="title">致谢：</view>
+				<text class="body">
+				特别致谢电商192"菠萝仔"提供的推广运营帮助
+				特别致谢原成信大助手在开发方面提供的支持与帮助
+				特别致谢计科196帮助测试的同学们
+				感谢Github的开源项目
+				感谢iconfont
+				感谢所有帮助We成信大测试推广的同学们
 				</text>
 			</view>
 			<view class="card">
@@ -67,6 +90,12 @@
 	export default {
 		data(){
 			return {
+				// #ifdef MP-QQ
+				appId: '1111006861',
+				// #endif
+				// #ifdef MP-WEIXIN
+				appId: 'wxfa2ea65288e28233',
+				// #endif
 				about: true,
 				changelog: [
 					{
@@ -136,7 +165,19 @@
 					}
 				]
 			}
-		}
+		},
+		methods: {
+			copyText(content) {
+				uni.setClipboardData({
+					data: content,
+					success: ()=>{
+						uni.showToast({
+							title: '复制成功'
+						});
+					}
+				})
+			}
+		},
 	}
 </script>
 
@@ -180,5 +221,6 @@
 		padding: 10rpx;
 		display: block;
 		word-break: break-all;
+		font-size: small;
 	}
 </style>
